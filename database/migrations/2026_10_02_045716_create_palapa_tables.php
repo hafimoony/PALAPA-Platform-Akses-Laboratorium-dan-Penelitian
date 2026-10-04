@@ -8,6 +8,9 @@ return new class extends Migration
 {
     public function up(): void
     {
+        // Nonaktifkan pengecekan Foreign Key agar tidak terhalang urutan pembuatan tabel
+        Schema::disableForeignKeyConstraints();
+
         // 1. Laboratories
         Schema::create('laboratories', function (Blueprint $table) {
             $table->string('lab_id', 50)->primary();
@@ -21,7 +24,7 @@ return new class extends Migration
             $table->decimal('longitude', 11, 8)->nullable();
             $table->decimal('base_price_per_session', 12, 2);
             $table->boolean('is_active')->default(true);
-            $table->timestamp('created_at')->useCurrent();
+            $table->timestamps();
         });
 
         // 2. Lab Equipments
@@ -34,7 +37,7 @@ return new class extends Migration
             $table->integer('quantity_total');
             $table->decimal('rental_price_per_unit', 12, 2)->default(0.00);
             $table->string('status', 30)->default('available');
-            $table->timestamp('created_at')->useCurrent();
+            $table->timestamps();
 
             $table->foreign('lab_id')->references('lab_id')->on('laboratories')->onDelete('cascade');
         });
@@ -45,7 +48,7 @@ return new class extends Migration
             $table->string('transaction_number', 50)->unique();
             $table->string('user_id', 50);
             $table->decimal('total_amount', 12, 2);
-            $table->timestamp('created_at')->useCurrent();
+            $table->timestamps();
 
             $table->foreign('user_id')->references('user_id')->on('users');
         });
@@ -63,6 +66,7 @@ return new class extends Migration
             $table->string('status', 30)->default('pending_review');
             $table->text('rejection_reason')->nullable();
             $table->string('approved_by_staff_id', 50)->nullable();
+            $table->timestamps();
 
             $table->foreign('booking_id')->references('transaction_id')->on('base_transactions')->onDelete('cascade');
             $table->foreign('lab_id')->references('lab_id')->on('laboratories');
@@ -77,6 +81,7 @@ return new class extends Migration
             $table->integer('quantity');
             $table->decimal('unit_price', 12, 2);
             $table->decimal('subtotal_price', 12, 2);
+            $table->timestamps();
 
             $table->foreign('booking_id')->references('booking_id')->on('bookings')->onDelete('cascade');
             $table->foreign('equipment_id')->references('equipment_id')->on('lab_equipments');
@@ -95,20 +100,25 @@ return new class extends Migration
             $table->decimal('vendor_admin_fee', 12, 2)->default(0.00);
             $table->decimal('grand_total', 12, 2);
             $table->string('payment_status', 30)->default('unpaid');
-            $table->timestamp('expired_at');
-            $table->timestamp('issued_at')->useCurrent();
+            $table->timestamp('expired_at')->nullable();
+            $table->timestamps();
 
             $table->foreign('booking_id')->references('booking_id')->on('bookings')->onDelete('cascade');
         });
+
+        // Aktifkan kembali pengecekan Foreign Key
+        Schema::enableForeignKeyConstraints();
     }
 
     public function down(): void
     {
+        Schema::disableForeignKeyConstraints();
         Schema::dropIfExists('invoices');
         Schema::dropIfExists('booking_equipment_items');
         Schema::dropIfExists('bookings');
         Schema::dropIfExists('base_transactions');
         Schema::dropIfExists('lab_equipments');
         Schema::dropIfExists('laboratories');
+        Schema::enableForeignKeyConstraints();
     }
 };

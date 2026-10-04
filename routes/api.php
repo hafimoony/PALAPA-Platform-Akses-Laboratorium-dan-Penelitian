@@ -2,7 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\AuthController;
-use App\Http\Controllers\Api\LaboratoryController;
+use App\Http\Controllers\Api\LaboratoryController as ApiLaboratoryController;
 use App\Http\Controllers\Api\BookingController;
 use App\Http\Controllers\Api\StaffBookingController;
 use App\Http\Controllers\Api\PaymentController;
@@ -16,11 +16,12 @@ use App\Http\Controllers\Api\IncidentRefundController;
 */
 
 // --- PUBLIC ROUTES (Tanpa Autentikasi Token) ---
-Route::match(['get', 'post'], '/register', [AuthController::class, 'register']);
-Route::match(['get', 'post'], '/login', [AuthController::class, 'login']);
+Route::post('/register', [AuthController::class, 'register']);
+Route::post('/login', [AuthController::class, 'login']);
 
-Route::get('/labs', [LaboratoryController::class, 'index']);
-Route::get('/labs/{id}', [LaboratoryController::class, 'show']);
+// Endpoint API Laboratorium (Menggunakan alias ApiLaboratoryController)
+Route::get('/labs', [ApiLaboratoryController::class, 'index']);
+Route::get('/labs/{id}', [ApiLaboratoryController::class, 'show']);
 
 
 // --- PROTECTED ROUTES (Wajib Kirim Header: Authorization: Bearer <token>) ---
