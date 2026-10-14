@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
+use Laravel\Socialite\Facades\Socialite;
 
 class AuthController extends Controller
 {
@@ -71,8 +72,8 @@ class AuthController extends Controller
         });
 
         if (!$request->expectsJson()) {
-            Auth::login($result['user']);
-            return redirect()->route('home')->with('success', 'Registrasi berhasil!');
+            // Redirect langsung ke halaman login dengan pesan sukses
+            return redirect()->route('login')->with('success', 'Registrasi akun berhasil! Silakan masuk dengan email dan kata sandi Anda.');
         }
 
         return response()->json([
@@ -157,4 +158,35 @@ class AuthController extends Controller
             'message' => 'Logged out successfully',
         ]);
     }
+
+    // PAKE GOOGLE
+    // 1. Redirect ke Halaman Login Google
+public function redirectToGoogle()
+{
+    return Socialite::driver('google')->redirect();
+}
+
+// 2. Handle Callback dari Google
+public function handleGoogleCallback()
+{
+    try {
+        $googleUser = Socialite::driver('google')->user();
+
+        // Cari user berdasarkan email atau buat user baru
+        $user = User::firstOrCreate(
+            ['email' => $googleUser->getEmail()],
+            [
+                'name' => $googleUser->getName(),
+                'password' => bcrypt(Str::random(16)), // Password acak
+                'role' => 'client', // Default role penyewa
+            ]
+        );
+
+        Auth::login($user);
+
+        return redirect()->route('home')->with('success', 'Berhasil masuk dengan akun Google!');
+    } catch (\Exception $e) {
+        return redirect()->route('login')->withErrors(['msg' => 'Gagal masuk menggunakan Google. Silakan coba lagi.']);
+    }
+}
 }

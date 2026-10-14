@@ -313,12 +313,29 @@
         }
 
         .form-extra-options {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 22px;
-            font-size: 11px;
-        }
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    position: relative;
+    z-index: 5;
+}
+
+.forgot-link {
+    color: #334EAC;
+    font-size: 12px;
+    font-weight: 600;
+    text-decoration: none;
+    position: relative;
+    z-index: 10;
+    pointer-events: auto !important;
+    cursor: pointer !important;
+}
+
+.forgot-link:hover {
+    text-decoration: underline;
+    color: #172A68;
+}
         .checkbox-label {
             display: flex;
             align-items: center;
@@ -673,12 +690,14 @@
                         </div>
                     </div>
 
-                    <div class="form-extra-options">
-                        <label class="checkbox-label">
-                            <input type="checkbox" name="remember"> Ingat saya di perangkat ini
-                        </label>
-                        <a href="#" class="forgot-link">Lupa Kata Sandi?</a>
-                    </div>
+                    <div class="form-extra-options" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; position: relative; z-index: 10;">
+    <label class="checkbox-label" style="cursor: pointer; font-size: 12px;">
+        <input type="checkbox" name="remember"> Ingat saya di perangkat ini
+    </label>
+    <a href="{{ route('password.request') }}" class="forgot-link" style="position: relative; z-index: 20; pointer-events: auto; cursor: pointer;">
+        Lupa Kata Sandi?
+    </a>
+</div>
 
                     <button type="submit" class="btn-login-submit">
                         Masuk ke Akun PALAPA <i class="fa-solid fa-arrow-right"></i>
@@ -692,16 +711,17 @@
                 </div>
 
                 <div class="sso-buttons-row">
-                    <a href="#" class="btn-sso-item">
-                        <i class="fa-brands fa-google text-danger"></i> Akun Belajar.id / Google
-                    </a>
-                    <a href="#" class="btn-sso-item">
-                        <i class="fa-solid fa-graduation-cap text-primary"></i> SSO Kedaireka / Dikti
-                    </a>
-                </div>
+    <a href="{{ route('google.login') }}" class="btn-sso-item">
+        <i class="fa-brands fa-google text-danger"></i> Akun Belajar.id / Google
+    </a>
+    <a href="#" class="btn-sso-item">
+        <i class="fa-solid fa-graduation-cap text-primary"></i> SSO Kedaireka / Dikti
+    </a>
+</div>
 
                 <div class="register-footer-text">
-                    Belum memiliki akun instansi atau lembaga riset? <a href="#">Daftar Penyewa Baru Di Sini</a>
+                    Belum memiliki akun instansi atau lembaga riset?
+                    <a href="{{ route('register') }}">Daftar Penyewa Baru Di Sini</a>
                 </div>
 
                 <div class="security-badge-footer">
