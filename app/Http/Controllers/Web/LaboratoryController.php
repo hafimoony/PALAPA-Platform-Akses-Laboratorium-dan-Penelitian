@@ -9,15 +9,14 @@ use Illuminate\Http\Request;
 class LaboratoryController extends Controller
 {
     public function beranda()
-    {
-        $labs = Laboratory::where('is_active', true)
-            ->inRandomOrder()
-            ->take(3)
-            ->get();
+{
+    $labs = Laboratory::where('is_active', true)->inRandomOrder()->take(3)->get();
 
-        return view('client.beranda', compact('labs'));
-    }
+    // Ambil semua data lab beserta info kampus dan lokasinya
+    $mapLabs = Laboratory::where('is_active', true)->get();
 
+    return view('client.beranda', compact('labs', 'mapLabs'));
+}
     // Katalog Lengkap dengan Filter & Pagination
     public function index(Request $request)
     {

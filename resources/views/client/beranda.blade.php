@@ -7,7 +7,8 @@
     <!-- Google Fonts & FontAwesome Icons -->
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <style>
         * {
             box-sizing: border-box;
@@ -441,100 +442,74 @@
         }
 
         /* --- MAP SECTION --- */
-        .map-card {
-            background: #ffffff;
-            padding: 24px;
-            border-radius: 16px;
-            border: 1px solid #E2E8F0;
-            margin-bottom: 24px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
-        }
-        .map-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-end;
-            margin-bottom: 16px;
-            padding-bottom: 14px;
-            border-bottom: 1px solid #E2E8F0;
-        }
-        .region-tabs {
-            display: flex;
-            gap: 6px;
-        }
-        .region-btn {
-            padding: 6px 14px;
-            border-radius: 8px;
-            font-size: 11px;
-            font-weight: 500;
-            background: #EBF3FF;
-            color: #475569;
-            text-decoration: none;
-        }
-        .region-btn.active {
-            background: #334EAC;
-            color: #ffffff;
-            font-weight: 600;
-        }
-        .map-container {
-            height: 360px;
-            background: #DCE8FB;
-            border-radius: 12px;
-            position: relative;
-            overflow: hidden;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .map-bg-img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            opacity: 0.7;
-        }
-        .map-pin-card {
-            position: absolute;
-            left: 20%;
-            top: 30%;
-            background: rgba(255, 255, 255, 0.95);
-            padding: 12px 16px;
-            border-radius: 12px;
-            border: 1px solid #E2E8F0;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-            max-width: 310px;
-            backdrop-filter: blur(4px);
-        }
-        .map-pin-title {
-            font-size: 11px;
-            font-weight: 700;
-            color: #0f172a;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            margin-bottom: 4px;
-        }
-        .map-pin-title i {
-            color: #ef4444;
-        }
-        .map-pin-desc {
-            font-size: 10px;
-            color: #64748b;
-            line-height: 1.4;
-        }
-        .map-stat-badge {
-            position: absolute;
-            right: 20px;
-            bottom: 20px;
-            background: rgba(51, 78, 172, 0.92);
-            color: #ffffff;
-            padding: 8px 16px;
-            border-radius: 10px;
-            font-size: 11px;
-            font-weight: 600;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            backdrop-filter: blur(4px);
-        }
+.map-card {
+    background: #ffffff;
+    padding: 24px;
+    border-radius: 16px;
+    border: 1px solid #E2E8F0;
+    margin-bottom: 24px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+}
+.map-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 16px;
+    padding-bottom: 14px;
+    border-bottom: 1px solid #E2E8F0;
+}
+.region-tabs {
+    display: flex;
+    gap: 6px;
+}
+.region-btn {
+    padding: 6px 14px;
+    border-radius: 8px;
+    font-size: 11px;
+    font-weight: 500;
+    background: #EBF3FF;
+    color: #475569;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+.region-btn.active {
+    background: #334EAC;
+    color: #ffffff;
+    font-weight: 600;
+}
+
+/* UBAH BAGIAN INI: Wadah Peta Leaflet */
+#map-container {
+    width: 100%;
+    height: 380px;
+    border-radius: 12px;
+    position: relative;
+    z-index: 1;
+}
+.map-stat-badge {
+    position: absolute;
+    right: 20px;
+    bottom: 20px;
+    background: rgba(51, 78, 172, 0.92);
+    color: #ffffff;
+    padding: 8px 16px;
+    border-radius: 10px;
+    font-size: 11px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    backdrop-filter: blur(4px);
+    z-index: 1000;
+}
+
+/* Custom Popup Leaflet agar serasi dengan UI Palapa */
+.leaflet-popup-content-wrapper {
+    border-radius: 12px;
+    font-family: 'Poppins', sans-serif;
+    padding: 2px;
+}
 
         /* --- GRANT BANNER --- */
         .grant-banner {
@@ -853,33 +828,200 @@
         </section>
 
         <!-- PETA SEBARAN NASIONAL -->
-        <section class="map-card">
-            <div class="map-header">
-                <div>
-                    <div class="section-subtitle">PETA SEBARAN NASIONAL</div>
-                    <h2 class="section-title">Jejaring Pusat Laboratorium Riset Indonesia</h2>
-                    <p class="section-desc">Tersebar di 5 koridor riset utama dengan lebih dari 2.400 unit instrumen terhubung.</p>
-                </div>
-                <div class="region-tabs">
-                    <a href="#" class="region-btn active">Jabodetabek</a>
-                    <a href="#" class="region-btn">Bandung & Jabar</a>
-                    <a href="#" class="region-btn">DI Yogyakarta</a>
-                    <a href="#" class="region-btn">Jawa Timur</a>
-                    <a href="#" class="region-btn">Sulawesi & Makassar</a>
-                </div>
-            </div>
-            <div class="map-container">
-                <img src="https://images.unsplash.com/photo-1526778548025-fa2f459cd5c1?q=80&w=1200&auto=format&fit=crop" class="map-bg-img" alt="Map Indonesia">
-                <div class="map-pin-card">
-                    <div class="map-pin-title"><i class="fa-solid fa-location-dot"></i> Hub Utama: Kawasan Riset BJ Habibie Serpong</div>
-                    <div class="map-pin-desc">34 Laboratorium terpadu siap reservasi instrumen reaktor, radiasi, dan analisis material.</div>
-                </div>
-                <div class="map-stat-badge">
-                    <i class="fa-solid fa-circle-check" style="color: #34d399;"></i> 2.410 Instrumen Aktif Terkoneksi Hari Ini
-                </div>
-            </div>
-        </section>
+<section class="map-card">
+    <div class="map-header">
+        <div>
+            <div class="section-subtitle">PETA SEBARAN NASIONAL</div>
+            <h2 class="section-title">Jejaring Pusat Laboratorium Riset Indonesia</h2>
+            <p class="section-desc">Tersebar di 5 koridor riset utama dengan lebih dari 2.400 unit instrumen terhubung.</p>
+        </div>
+        <div class="region-tabs">
+    <a href="javascript:void(0)" class="region-btn active" onclick="filterMap('all', this)">Semua</a>
+    <a href="javascript:void(0)" class="region-btn" onclick="filterMap('jabodetabek', this)">Jabodetabek</a>
+    <a href="javascript:void(0)" class="region-btn" onclick="filterMap('jabar', this)">Bandung & Jabar</a>
+    <a href="javascript:void(0)" class="region-btn" onclick="filterMap('yogya', this)">DI Yogyakarta</a>
+    <a href="javascript:void(0)" class="region-btn" onclick="filterMap('jatim', this)">Jawa Timur</a>
+    <a href="javascript:void(0)" class="region-btn" onclick="filterMap('sulawesi', this)">Sulawesi & Luar Jawa</a>
+</div>
+    </div>
 
+    <div style="position: relative;">
+        <!-- Container Peta Leaflet Interaktif -->
+        <div id="map-container"></div>
+
+        <!-- Stat Badge Pojok Kanan Bawah -->
+        <div class="map-stat-badge">
+            <i class="fa-solid fa-circle-check" style="color: #34d399;"></i> 2.410 Instrumen Aktif Terkoneksi Hari Ini
+        </div>
+    </div>
+</section>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        // Fix Icon Path Leaflet
+        delete L.Icon.Default.prototype._getIconUrl;
+        L.Icon.Default.mergeOptions({
+            iconRetinaUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon-2x.png',
+            iconUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon.png',
+            shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png',
+        });
+
+        // 1. Inisialisasi Peta Indonesia
+        var map = L.map('map-container').setView([-2.548926, 118.014863], 5);
+
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 18,
+            attribution: '&copy; OpenStreetMap'
+        }).addTo(map);
+
+        var rawLabs = @json($mapLabs ?? []);
+
+        // 2. Database Geocoding Kampus Lengkap Indonesia
+        function resolveLocation(lab) {
+            // Jika seeder sudah punya lat & lng dari DB
+            if (lab.latitude && lab.longitude) {
+                return {
+                    lat: parseFloat(lab.latitude),
+                    lng: parseFloat(lab.longitude),
+                    region: getRegionFromCoords(lab.latitude, lab.longitude)
+                };
+            }
+
+            var text = ((lab.campus_name || '') + ' ' + (lab.lab_name || '') + ' ' + (lab.address_description || '')).toLowerCase();
+
+            // YOGYAKARTA (UII, UGM, UNY, UMY, UIN Suka, UAD, dll)
+            if (text.includes('uii') || text.includes('islam indonesia') || text.includes('kaliurang')) {
+                return { lat: -7.6878, lng: 110.4144, region: 'yogya' }; // Kampus Terpadu UII Kaliurang
+            }
+            if (text.includes('ugm') || text.includes('gadjah mada')) {
+                return { lat: -7.7713, lng: 110.3775, region: 'yogya' }; // UGM Sleman
+            }
+            if (text.includes('uny') || text.includes('negeri yogyakarta')) {
+                return { lat: -7.7725, lng: 110.3860, region: 'yogya' };
+            }
+            if (text.includes('umy') || text.includes('muhammadiyah yogyakarta')) {
+                return { lat: -7.8105, lng: 110.3200, region: 'yogya' };
+            }
+            if (text.includes('yogyakarta') || text.includes('yogya') || text.includes('jogja')) {
+                return { lat: -7.7800, lng: 110.3700, region: 'yogya' };
+            }
+
+            // JABODETABEK & SERPONG (UI, UIN Ciputat, IPB, BRIN, UNJ, Trisakti, Telkom)
+            if (text.includes('uin') && (text.includes('syarif') || text.includes('jakarta') || text.includes('ciputat'))) {
+                return { lat: -6.3061, lng: 106.7558, region: 'jabodetabek' }; // UIN Syarif Hidayatullah Ciputat
+            }
+            if (text.includes('ui') || text.includes('universitas indonesia')) {
+                return { lat: -6.3650, lng: 106.8291, region: 'jabodetabek' }; // UI Depok
+            }
+            if (text.includes('brin') || text.includes('serpong') || text.includes('habibie')) {
+                return { lat: -6.3553, lng: 106.6710, region: 'jabodetabek' }; // BRIN Serpong
+            }
+            if (text.includes('ipb') || text.includes('bogor')) {
+                return { lat: -6.5593, lng: 106.7262, region: 'jabodetabek' }; // IPB Dramaga
+            }
+            if (text.includes('jakarta') || text.includes('depok') || text.includes('tangerang') || text.includes('bekasi')) {
+                return { lat: -6.2000, lng: 106.8166, region: 'jabodetabek' };
+            }
+
+            // BANDUNG & JABAR (ITB, UNPAD, UPI, Telkom)
+            if (text.includes('itb') || text.includes('teknologi bandung')) {
+                return { lat: -6.8914, lng: 107.6106, region: 'jabar' }; // ITB Ganesha
+            }
+            if (text.includes('unpad') || text.includes('padjadjaran')) {
+                return { lat: -6.9261, lng: 107.7745, region: 'jabar' }; // UNPAD Jatinangor
+            }
+            if (text.includes('bandung') || text.includes('jabar')) {
+                return { lat: -6.9147, lng: 107.6098, region: 'jabar' };
+            }
+
+            // JAWA TIMUR (UNAIR, ITS, UB, UM, UNEJ, UNESA, UPN, Pasuruan)
+            if (text.includes('unair') || text.includes('airlangga')) {
+                return { lat: -7.2756, lng: 112.7836, region: 'jatim' }; // UNAIR Kampus C
+            }
+            if (text.includes('its') || text.includes('sepuluh nopember')) {
+                return { lat: -7.2823, lng: 112.7949, region: 'jatim' }; // ITS Sukolilo
+            }
+            if (text.includes('ub') || text.includes('brawijaya') || text.includes('malang')) {
+                return { lat: -7.9525, lng: 112.6144, region: 'jatim' }; // UB Malang
+            }
+            if (text.includes('surabaya') || text.includes('pasuruan') || text.includes('jatim') || text.includes('jawa timur')) {
+                return { lat: -7.2504, lng: 112.7688, region: 'jatim' };
+            }
+
+            // SULAWESI & LUAR JAWA (UNHAS, UNPATTI, UNAND, USU, UNSRAT, UNMUL)
+            if (text.includes('pattimura') || text.includes('unpatti') || text.includes('ambon')) {
+                return { lat: -3.6552, lng: 128.1906, region: 'sulawesi' }; // Unpatti Ambon
+            }
+            if (text.includes('unhas') || text.includes('hasanuddin') || text.includes('makassar')) {
+                return { lat: -5.1328, lng: 119.4872, region: 'sulawesi' }; // Unhas Makassar
+            }
+            if (text.includes('andalas') || text.includes('unand') || text.includes('padang')) {
+                return { lat: -0.9142, lng: 100.4661, region: 'sulawesi' };
+            }
+
+            // Default Fallback: Tersebar di Jawa Timur/Surabaya
+            return { lat: -7.2756, lng: 112.7836, region: 'jatim' };
+        }
+
+        function getRegionFromCoords(lat, lng) {
+            if (lat < -3.0 && lng > 118.0) return 'sulawesi';
+            if (lat < -7.0 && lng > 111.0) return 'jatim';
+            if (lat < -7.5 && lng > 109.0) return 'yogya';
+            if (lat < -6.5 && lng > 107.0) return 'jabar';
+            return 'jabodetabek';
+        }
+
+        var activeMarkers = [];
+
+        // 3. Render 50 Marker dengan Posisi yang Sangat Presisi
+        if (rawLabs.length > 0) {
+            rawLabs.forEach(function (lab, index) {
+                var loc = resolveLocation(lab);
+
+                // Offset sangat halus (berjarak ~50-100m) agar jika ada beberapa lab di kampus yang sama, pinnya bersanding rapi
+                var jitterLat = loc.lat + ((index % 3 - 1) * 0.0008);
+                var jitterLng = loc.lng + ((Math.floor(index / 3) % 3 - 1) * 0.0008);
+
+                var marker = L.marker([jitterLat, jitterLng]).addTo(map);
+
+                var popupContent = `
+                    <div style="padding: 4px; min-width: 190px;">
+                        <span style="font-size: 10px; font-weight: 700; color: #334EAC; text-transform: uppercase;">
+                            <i class="fa-solid fa-university"></i> ${lab.campus_name || 'Fasilitas Riset'}
+                        </span>
+                        <h4 style="font-size: 12px; font-weight: 700; color: #0f172a; margin: 3px 0 6px 0;">${lab.lab_name}</h4>
+                        <p style="font-size: 10px; color: #64748b; margin: 0 0 8px 0;"><i class="fa-solid fa-layer-group"></i> ${lab.category || 'Laboratorium'}</p>
+                        <a href="/labs/${lab.lab_id}" style="display: inline-block; padding: 5px 12px; background: #334EAC; color: #fff; border-radius: 6px; font-size: 10px; font-weight: 700; text-decoration: none;">
+                            Lihat Detail Lab
+                        </a>
+                    </div>
+                `;
+
+                marker.bindPopup(popupContent);
+                activeMarkers.push({ region: loc.region, marker: marker, lat: jitterLat, lng: jitterLng });
+            });
+        }
+
+        // 4. Logika Tombol Tab Filter Wilayah
+        window.filterMap = function(region, btnElement) {
+            document.querySelectorAll('.region-btn').forEach(btn => btn.classList.remove('active'));
+            btnElement.classList.add('active');
+
+            if (region === 'all') {
+                map.flyTo([-2.548926, 118.014863], 5);
+                return;
+            }
+
+            var regionMarkers = activeMarkers.filter(m => m.region === region);
+            if (regionMarkers.length > 0) {
+                var first = regionMarkers[0];
+                var zoomLevel = (region === 'sulawesi') ? 6 : 12;
+                map.flyTo([first.lat, first.lng], zoomLevel, { duration: 1.2 });
+                first.marker.openPopup();
+            }
+        };
+    });
+</script>
         <!-- BANNER DANA HIBAH -->
         <section class="grant-banner">
             <div>
