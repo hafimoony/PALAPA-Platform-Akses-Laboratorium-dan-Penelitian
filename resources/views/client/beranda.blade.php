@@ -383,7 +383,6 @@
         }
         .lab-rating span {
             color: #94a3b8;
-            font-weight: 400;
         }
         .lab-name {
             font-size: 15px;
@@ -442,74 +441,74 @@
         }
 
         /* --- MAP SECTION --- */
-.map-card {
-    background: #ffffff;
-    padding: 24px;
-    border-radius: 16px;
-    border: 1px solid #E2E8F0;
-    margin-bottom: 24px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
-}
-.map-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-end;
-    margin-bottom: 16px;
-    padding-bottom: 14px;
-    border-bottom: 1px solid #E2E8F0;
-}
-.region-tabs {
-    display: flex;
-    gap: 6px;
-}
-.region-btn {
-    padding: 6px 14px;
-    border-radius: 8px;
-    font-size: 11px;
-    font-weight: 500;
-    background: #EBF3FF;
-    color: #475569;
-    border: none;
-    cursor: pointer;
-    transition: all 0.2s;
-}
-.region-btn.active {
-    background: #334EAC;
-    color: #ffffff;
-    font-weight: 600;
-}
+        .map-card {
+            background: #ffffff;
+            padding: 24px;
+            border-radius: 16px;
+            border: 1px solid #E2E8F0;
+            margin-bottom: 24px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+        }
+        .map-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            margin-bottom: 16px;
+            padding-bottom: 14px;
+            border-bottom: 1px solid #E2E8F0;
+        }
+        .region-tabs {
+            display: flex;
+            gap: 6px;
+        }
+        .region-btn {
+            padding: 6px 14px;
+            border-radius: 8px;
+            font-size: 11px;
+            font-weight: 500;
+            background: #EBF3FF;
+            color: #475569;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .region-btn.active {
+            background: #334EAC;
+            color: #ffffff;
+            font-weight: 600;
+        }
 
-/* UBAH BAGIAN INI: Wadah Peta Leaflet */
-#map-container {
-    width: 100%;
-    height: 380px;
-    border-radius: 12px;
-    position: relative;
-    z-index: 1;
-}
-.map-stat-badge {
-    position: absolute;
-    right: 20px;
-    bottom: 20px;
-    background: rgba(51, 78, 172, 0.92);
-    color: #ffffff;
-    padding: 8px 16px;
-    border-radius: 10px;
-    font-size: 11px;
-    font-weight: 600;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    backdrop-filter: blur(4px);
-    z-index: 1000;
-}
+        /* UBAH BAGIAN INI: Wadah Peta Leaflet */
+        #map-container {
+            width: 100%;
+            height: 380px;
+            border-radius: 12px;
+            position: relative;
+            z-index: 1;
+        }
+        .map-stat-badge {
+            position: absolute;
+            right: 20px;
+            bottom: 20px;
+            background: rgba(51, 78, 172, 0.92);
+            color: #ffffff;
+            padding: 8px 16px;
+            border-radius: 10px;
+            font-size: 11px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            backdrop-filter: blur(4px);
+            z-index: 1000;
+        }
 
-/* Custom Popup Leaflet agar serasi dengan UI Palapa */
-.leaflet-popup-content-wrapper {
-    border-radius: 12px;
-    font-family: 'Poppins', sans-serif;
-    padding: 2px;
-}
+        /* Custom Popup Leaflet agar serasi dengan UI Palapa */
+        .leaflet-popup-content-wrapper {
+            border-radius: 12px;
+            font-family: 'Poppins', sans-serif;
+            padding: 2px;
+        }
 
         /* --- GRANT BANNER --- */
         .grant-banner {
@@ -566,6 +565,7 @@
             align-items: center;
             justify-content: center;
             transition: transform 0.2s, box-shadow 0.2s;
+            text-decoration: none;
         }
         .category-card:hover {
             transform: translateY(-3px);
@@ -683,6 +683,9 @@
             font-size: 12px;
             text-decoration: none;
         }
+        .footer-links a:hover {
+            color: #334EAC;
+        }
 
         .footer-bottom {
             padding: 20px 0 30px 0;
@@ -701,16 +704,19 @@
         <!-- NAVBAR -->
         <div class="navbar-wrapper">
             <nav class="navbar">
-                <!-- LOGO PALAPA (Memanggil dari public/images/logo-palapa.png) -->
+                <!-- LOGO PALAPA (Memanggil dari public/images/logo-palapa.jpg) -->
                 <a href="{{ url('/') }}" class="nav-brand">
                     <img src="{{ asset('images/logo-palapa.jpg') }}" alt="PALAPA Logo">
                 </a>
 
                 <div class="nav-links">
                     <a href="{{ url('/') }}" class="nav-link active">Beranda</a>
+                    <!-- Tautan yang sudah ada tidak saya ubah -->
                     <a href="{{ route('labs.index') }}" class="nav-link">Katalog Lab</a>
-                    <a href="#instrumen" class="nav-link">Instrumen Riset</a>
-                    <a href="#bantuan" class="nav-link">Pusat Bantuan</a>
+                    
+                    <!-- Menambahkan rute ke placeholder #instrumen dan #bantuan -->
+                    <a href="{{ route('labs.index') }}" class="nav-link">Instrumen Riset</a>
+                    <a href="{{ url('/pusat-bantuan') }}" class="nav-link">Pusat Bantuan</a>
                 </div>
 
                 <div class="nav-search">
@@ -719,8 +725,9 @@
                 </div>
 
                 <div class="nav-actions">
-                    <a href="#" class="icon-btn"><i class="fa-solid fa-cart-shopping"></i></a>
-                    <a href="#" class="icon-btn"><i class="fa-solid fa-globe"></i></a>
+                    <!-- Menambahkan rute Riwayat dan Login ke icon action navbar -->
+                    <a href="{{ url('/riwayat') }}" class="icon-btn" title="Riwayat"><i class="fa-solid fa-cart-shopping"></i></a>
+                    <a href="{{ url('/login') }}" class="icon-btn" title="Masuk Akun"><i class="fa-solid fa-globe"></i></a>
                 </div>
             </nav>
         </div>
@@ -745,6 +752,7 @@
         <!-- SEARCH FORM CARD -->
         <section class="search-card">
             <div class="search-card-title">Cari Instrumen Khusus</div>
+            <!-- Tautan action yang sudah ada tidak saya ubah -->
             <form action="{{ route('labs.index') }}" method="GET" class="search-form">
                 <div class="form-group">
                     <label><i class="fa-solid fa-location-dot"></i> LOKASI / KAMPUS</label>
@@ -771,6 +779,7 @@
 
             <div class="filter-tags">
                 <span class="tag-title">FILTER POPULER:</span>
+                <!-- Tautan filter yang sudah ada tidak saya ubah -->
                 <a href="{{ route('labs.index', ['filter' => 'Mikroskopi Elektron']) }}" class="tag active">Mikroskopi Elektron <i class="fa-solid fa-xmark"></i></a>
                 <a href="{{ route('labs.index', ['filter' => 'Spektrometri Massa']) }}" class="tag">Spektrometri Massa</a>
                 <a href="{{ route('labs.index', ['filter' => 'Tersedia Hari Ini']) }}" class="tag">Tersedia Hari Ini</a>
@@ -788,12 +797,13 @@
                         <h2 class="section-title">Laboratorium Rekomendasi Terpopuler</h2>
                         <p class="section-desc">Fasilitas riset berstandar internasional dengan operasional instrumen siap reservasi</p>
                     </div>
+                    <!-- Tautan ini tidak diubah -->
                     <a href="{{ route('labs.index') }}" class="see-all-link">Lihat Semua Lab (142 Fasilitas) <i class="fa-solid fa-arrow-right"></i></a>
                 </div>
             </div>
 
             <div class="catalog-grid">
-    @forelse($labs as $lab)
+    @forelse($labs ?? [] as $lab)
     <div class="lab-card">
         <div class="lab-card-img-wrapper">
             <img src="https://images.unsplash.com/photo-1532094349884-543bc11b234d?q=80&w=600&auto=format&fit=crop" class="lab-card-img" alt="{{ $lab->lab_name }}">
@@ -817,6 +827,7 @@
                     <span class="lab-price-label">Mulai dari</span>
                     <div class="lab-price-val">Rp {{ number_format($lab->base_price_per_session, 0, ',', '.') }} <span class="lab-price-unit">/ sesi</span></div>
                 </div>
+                <!-- Tautan menuju halaman show lab tidak saya ubah -->
                 <a href="{{ route('labs.show', $lab->lab_id) }}" class="btn-detail">Lihat Detail & Sewa <i class="fa-solid fa-arrow-right"></i></a>
             </div>
         </div>
@@ -836,6 +847,7 @@
             <p class="section-desc">Tersebar di 5 koridor riset utama dengan lebih dari 2.400 unit instrumen terhubung.</p>
         </div>
         <div class="region-tabs">
+            <!-- Tautan JS untuk fungsi peta tidak saya ubah -->
     <a href="javascript:void(0)" class="region-btn active" onclick="filterMap('all', this)">Semua</a>
     <a href="javascript:void(0)" class="region-btn" onclick="filterMap('jabodetabek', this)">Jabodetabek</a>
     <a href="javascript:void(0)" class="region-btn" onclick="filterMap('jabar', this)">Bandung & Jabar</a>
@@ -984,6 +996,7 @@
 
                 var marker = L.marker([jitterLat, jitterLng]).addTo(map);
 
+                // Tautan di dalam popup marker Leaflet tidak diubah
                 var popupContent = `
                     <div style="padding: 4px; min-width: 190px;">
                         <span style="font-size: 10px; font-weight: 700; color: #334EAC; text-transform: uppercase;">
@@ -1028,7 +1041,8 @@
                 <h3 class="grant-title"><i class="fa-solid fa-file-invoice-dollar"></i> Mempunyai Dana Hibah Riset (BIMA Kemendiktisaintek, RISPRO LPDP)?</h3>
                 <p class="grant-desc">PALAPA menyediakan penerbitan SPK otomatis, faktur pajak resmi, dan integrasi penagihan langsung ke pengelola keuangan universitas.</p>
             </div>
-            <a href="#" class="btn-grant">Aktivasi Akun Hibah</a>
+            <!-- Menambahkan tautan login pada banner -->
+            <a href="{{ url('/login') }}" class="btn-grant">Aktivasi Akun Hibah</a>
         </section>
 
         <!-- KATALOG KATEGORI CEPAT -->
@@ -1038,36 +1052,37 @@
                 <h2 class="section-title">Layanan Pengujian Paling Dicari</h2>
             </div>
             <div class="category-grid">
-                <div class="category-card">
+                <!-- Membungkus card menjadi tautan aktif menuju /labs -->
+                <a href="{{ route('labs.index', ['filter' => 'GC-MS']) }}" class="category-card" style="text-decoration:none;">
                     <div class="category-icon"><i class="fa-solid fa-flask"></i></div>
                     <div class="category-name">GC-MS & HPLC</div>
                     <div class="category-price">Mulai 180rb</div>
-                </div>
-                <div class="category-card">
+                </a>
+                <a href="{{ route('labs.index', ['filter' => 'SEM']) }}" class="category-card" style="text-decoration:none;">
                     <div class="category-icon"><i class="fa-solid fa-microscope"></i></div>
                     <div class="category-name">SEM & TEM</div>
                     <div class="category-price">Mulai 250rb</div>
-                </div>
-                <div class="category-card">
+                </a>
+                <a href="{{ route('labs.index', ['filter' => 'XRD']) }}" class="category-card" style="text-decoration:none;">
                     <div class="category-icon"><i class="fa-solid fa-cubes"></i></div>
                     <div class="category-name">XRD Kristalinitas</div>
                     <div class="category-price">Mulai 220rb</div>
-                </div>
-                <div class="category-card">
+                </a>
+                <a href="{{ route('labs.index', ['filter' => 'DNA']) }}" class="category-card" style="text-decoration:none;">
                     <div class="category-icon"><i class="fa-solid fa-dna"></i></div>
                     <div class="category-name">Sanger & NGS DNA</div>
                     <div class="category-price">Mulai 400rb</div>
-                </div>
-                <div class="category-card">
+                </a>
+                <a href="{{ route('labs.index', ['filter' => 'Termal']) }}" class="category-card" style="text-decoration:none;">
                     <div class="category-icon"><i class="fa-solid fa-fire-flame-curved"></i></div>
                     <div class="category-name">TGA & DSC Termal</div>
                     <div class="category-price">Mulai 190rb</div>
-                </div>
-                <div class="category-card">
+                </a>
+                <a href="{{ route('labs.index', ['filter' => 'Kalibrasi']) }}" class="category-card" style="text-decoration:none;">
                     <div class="category-icon"><i class="fa-solid fa-gauge-high"></i></div>
                     <div class="category-name">Kalibrasi Sensor KAN</div>
                     <div class="category-price">Mulai 310rb</div>
-                </div>
+                </a>
             </div>
         </section>
 
@@ -1123,30 +1138,31 @@
             <div>
                 <div class="footer-col-title">MARKETPLACE SAINS</div>
                 <ul class="footer-links">
-                    <li><a href="#">Layanan Uji</a></li>
-                    <li><a href="#">Sewa Instrumen Canggih</a></li>
-                    <li><a href="#">Jasa Laboran</a></li>
+                    <li><a href="{{ route('labs.index') }}">Layanan Uji</a></li>
+                    <li><a href="{{ route('labs.index') }}">Sewa Instrumen Canggih</a></li>
+                    <li><a href="{{ route('labs.index') }}">Jasa Laboran</a></li>
                 </ul>
             </div>
             <div>
                 <div class="footer-col-title">DUKUNGAN RISET</div>
                 <ul class="footer-links">
-                    <li><a href="#">Bantuan Peneliti</a></li>
-                    <li><a href="#">Pedoman Keselamatan Lab</a></li>
-                    <li><a href="#">Integrasi Hibah & SPK</a></li>
+                    <li><a href="{{ url('/pusat-bantuan') }}">Bantuan Peneliti</a></li>
+                    <li><a href="{{ url('/pusat-bantuan') }}">Pedoman Keselamatan Lab</a></li>
+                    <li><a href="{{ url('/login') }}">Integrasi Hibah & SPK</a></li>
                 </ul>
             </div>
             <div>
                 <div class="footer-col-title">PENGELOLA FASILITAS</div>
                 <ul class="footer-links">
-                    <li><a href="#">Daftarkan Lab Anda</a></li>
-                    <li><a href="#">Standar Kalibrasi</a></li>
-                    <li><a href="#">Asuransi Alat</a></li>
+                    <li><a href="{{ url('/login') }}">Daftarkan Lab Anda</a></li>
+                    <li><a href="{{ route('labs.index') }}">Standar Kalibrasi</a></li>
+                    <li><a href="{{ url('/pusat-bantuan') }}">Asuransi Alat</a></li>
                 </ul>
             </div>
             <div>
                 <div class="footer-col-title">LEGAL & KONTAK</div>
                 <ul class="footer-links">
+                    <!-- Tautan kontak dikosongkan (href="#") sesuai permintaan -->
                     <li><a href="#">Kebijakan Privasi</a></li>
                     <li><a href="#">Syarat & Ketentuan</a></li>
                     <li><a href="#">Kontak PALAPA Indonesia</a></li>

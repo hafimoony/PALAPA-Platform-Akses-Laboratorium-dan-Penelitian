@@ -11,39 +11,44 @@ use Laravel\Socialite\Facades\Socialite;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 
-// Route Beranda (Menampilkan 3 Lab Random)
+// ===================================================
+// 1. ROUTE PUBLIK (Bisa diakses siapa saja)
+// ===================================================
+
+// Route Beranda
 Route::get('/', [LaboratoryController::class, 'beranda'])->name('home');
 
-// Route Katalog Lab Lengkap
+// Route Katalog & Detail Lab
 Route::get('/labs', [LaboratoryController::class, 'index'])->name('labs.index');
-
-// Route Detail Lab
 Route::get('/labs/{id}', [LaboratoryController::class, 'show'])->name('labs.show');
 
-// Route Login
+// Route Pusat Bantuan
+Route::get('/pusat-bantuan', function () {
+    return view('help.faq');
+})->name('bantuan');
+
+
+// ===================================================
+// 2. ROUTE AUTENTIKASI (Login, Register, Lupa Password)
+// ===================================================
+
+// Login
 Route::get('/login', function () {
     return view('auth.login');
 })->name('login');
-
 Route::post('/login', [AuthController::class, 'login']);
 
-// Group Route yang Wajib Login Dulu
-Route::middleware(['auth'])->group(function () {
-    // Beranda
-    Route::get('/', [LaboratoryController::class, 'beranda'])->name('home');
+// Register
+Route::get('/register', function () {
+    return view('auth.register');
+})->name('register');
+Route::post('/register', [AuthController::class, 'register']);
 
-    // Katalog Lab
-    Route::get('/labs', [LaboratoryController::class, 'index'])->name('labs.index');
-    Route::get('/labs/{id}', [LaboratoryController::class, 'show'])->name('labs.show');
-});
-
-// LUPA PASSWORD
-// Route Tampilan Form Lupa Password
+// Lupa Password
 Route::get('/forgot-password', function () {
     return view('auth.forgot-password');
 })->name('password.request');
 
-// Route Proses Submit Form Lupa Password
 Route::post('/forgot-password', function (\Illuminate\Http\Request $request) {
     $request->validate(['email' => 'required|email']);
 
@@ -55,15 +60,20 @@ Route::post('/forgot-password', function (\Illuminate\Http\Request $request) {
     return back()->with('status', 'Tautan instruksi pemulihan kata sandi telah dikirimkan ke email Anda.');
 })->name('password.email');
 
-// REGIS WOY REGIISSSS INI
-// Route untuk menampilkan Form Register
-Route::get('/register', function () {
-    return view('auth.register');
-})->name('register');
-
-// Route untuk memproses Submit Register
-Route::post('/register', [AuthController::class, 'register']);
-
-// INI LOGIN GOOGLE YA
+// Login Google
 Route::get('/auth/google', [AuthController::class, 'redirectToGoogle'])->name('google.login');
 Route::get('/auth/google/callback', [AuthController::class, 'handleGoogleCallback']);
+
+
+// ===================================================
+// 3. ROUTE WAJIB LOGIN (Hanya untuk user terdaftar)
+// ===================================================
+
+Route::middleware(['auth'])->group(function () {
+    // Route Riwayat Reservasi (Untuk icon keranjang di Navbar)
+    Route::get('/riwayat', function () {
+        return view('client.riwayat');
+    })->name('riwayat');
+    
+    // Tambahkan rute lain yang wajib login di sini (misal: checkout, profil)
+});

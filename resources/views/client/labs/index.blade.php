@@ -3,14 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Katalog Laboratorium - PALAPA PLATFORM</title>
-
-    <!-- Google Fonts & Font Awesome -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <title>Katalog Laboratorium & Instrumen - PALAPA</title>
+    <!-- Google Fonts & FontAwesome Icons -->
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
         * {
             box-sizing: border-box;
@@ -29,7 +25,7 @@
             padding: 0 20px;
         }
 
-        /* --- NAVBAR (Capsule Style Sesuai CSS Kamu) --- */
+        /* --- NAVBAR --- */
         .navbar-wrapper {
             padding: 20px 0;
         }
@@ -111,52 +107,21 @@
             font-size: 14px;
         }
 
-        /* --- FILTER SECTION --- */
-        .filter-section {
+        /* --- SEARCH CARD --- */
+        .search-card {
             background: #ffffff;
-            padding: 20px 24px;
+            padding: 24px 28px;
             border-radius: 16px;
             border: 1px solid #E2E8F0;
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
-            margin-bottom: 30px;
+            margin-bottom: 40px;
+            margin-top: 20px;
         }
-        .filter-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 16px;
-        }
-        .btn-filter-toggle {
-            background: #EBF3FF;
-            color: #334EAC;
-            padding: 8px 16px;
-            border-radius: 10px;
-            border: none;
-            font-size: 13px;
-            font-weight: 700;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-family: inherit;
-        }
-        .badge-kan-top {
-            background: #059669;
-            color: #ffffff;
-            padding: 6px 12px;
-            border-radius: 8px;
-            font-size: 11px;
-            font-weight: 700;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-        .filter-form {
+        .search-form {
             display: flex;
             gap: 16px;
             align-items: flex-end;
-            padding-top: 14px;
-            border-top: 1px solid #E2E8F0;
+            margin-bottom: 18px;
         }
         .form-group {
             flex: 1;
@@ -194,11 +159,6 @@
             color: #1e293b;
             outline: none;
         }
-        select.form-control {
-            padding-left: 14px;
-            appearance: none;
-            cursor: pointer;
-        }
         .btn-search {
             padding: 11px 28px;
             background: #334EAC;
@@ -217,61 +177,85 @@
         .btn-search:hover {
             background: #253a8a;
         }
+        .filter-tags {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        .tag-title {
+            font-size: 11px;
+            font-weight: 700;
+            color: #64748b;
+            margin-right: 4px;
+        }
+        .tag {
+            padding: 5px 14px;
+            background: #E8F1FF;
+            color: #334155;
+            border-radius: 20px;
+            text-decoration: none;
+            font-size: 11px;
+            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .tag.active {
+            background: #334EAC;
+            color: #ffffff;
+        }
 
-        /* --- SECTION TITLE --- */
+        /* --- CATALOG GRID & CARDS --- */
         .catalog-header {
+            background: linear-gradient(135deg, #091F5B 0%, #334EAC 100%);
+            border-radius: 20px;
+            padding: 40px;
+            color: #ffffff;
+            margin-bottom: 20px;
             display: flex;
             justify-content: space-between;
-            align-items: flex-end;
-            margin-bottom: 20px;
+            align-items: center;
         }
-        .section-title {
-            font-size: 20px;
+        .catalog-header-title {
+            font-size: 28px;
             font-weight: 700;
-            color: #0f172a;
+            margin-bottom: 8px;
         }
-        .section-desc {
-            font-size: 13px;
-            color: #64748b;
-            margin-top: 2px;
+        .catalog-header-desc {
+            font-size: 14px;
+            color: #cbd5e1;
         }
-        .sort-label {
-            font-size: 12px;
-            color: #64748b;
+        .catalog-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            margin-bottom: 50px;
         }
-
-        /* --- HORIZONTAL LAB CARD LIST --- */
-        .lab-list-horizontal {
-            display: flex;
-            flex-direction: column;
-            gap: 16px;
-            margin-bottom: 40px;
-        }
-        .lab-card-item {
+        .lab-card {
             background: #ffffff;
             border-radius: 16px;
             border: 1px solid #E2E8F0;
             overflow: hidden;
             display: flex;
+            flex-direction: column;
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
             transition: transform 0.2s, box-shadow 0.2s;
         }
-        .lab-card-item:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.06);
+        .lab-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.08);
         }
-        .lab-item-img-wrapper {
+        .lab-card-img-wrapper {
             position: relative;
-            width: 320px;
-            min-height: 200px;
-            flex-shrink: 0;
+            height: 180px;
         }
-        .lab-item-img {
+        .lab-card-img {
             width: 100%;
             height: 100%;
             object-fit: cover;
         }
-        .badge-kan-card {
+        .badge-kan {
             position: absolute;
             top: 12px;
             left: 12px;
@@ -286,11 +270,11 @@
             gap: 5px;
             backdrop-filter: blur(4px);
         }
-        .badge-location-card {
+        .badge-location {
             position: absolute;
             bottom: 12px;
-            left: 12px;
-            background: rgba(15, 23, 42, 0.8);
+            right: 12px;
+            background: rgba(15, 23, 42, 0.75);
             color: #ffffff;
             padding: 4px 10px;
             border-radius: 6px;
@@ -301,12 +285,12 @@
             gap: 5px;
             backdrop-filter: blur(4px);
         }
-        .lab-item-content {
-            padding: 20px 24px;
+        .lab-card-body {
+            padding: 18px;
             display: flex;
             flex-direction: column;
-            justify-content: space-between;
             flex: 1;
+            justify-content: space-between;
         }
         .lab-institution-row {
             display: flex;
@@ -316,34 +300,32 @@
         }
         .lab-institution {
             color: #334EAC;
-            font-size: 12px;
+            font-size: 11px;
             font-weight: 600;
             display: flex;
             align-items: center;
-            gap: 6px;
+            gap: 5px;
         }
         .lab-rating {
-            font-size: 12px;
+            font-size: 11px;
             font-weight: 700;
             color: #0f172a;
             display: flex;
             align-items: center;
-            gap: 4px;
+            gap: 3px;
         }
-        .lab-rating i { color: #f59e0b; }
-        .lab-rating span { color: #94a3b8; font-weight: 400; }
-        .lab-name-title {
-            font-size: 18px;
+        .lab-rating i {
+            color: #f59e0b;
+        }
+        .lab-rating span {
+            color: #94a3b8;
+        }
+        .lab-name {
+            font-size: 15px;
             font-weight: 700;
             color: #0f172a;
-            margin-bottom: 8px;
             line-height: 1.3;
-        }
-        .lab-item-desc {
-            font-size: 12px;
-            color: #64748b;
-            line-height: 1.5;
-            margin-bottom: 14px;
+            margin-bottom: 12px;
         }
         .lab-tags {
             display: flex;
@@ -354,12 +336,12 @@
         .lab-tag {
             background: #EBF3FF;
             color: #334155;
-            padding: 4px 10px;
-            border-radius: 6px;
-            font-size: 11px;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 10px;
             font-weight: 500;
         }
-        .lab-item-footer {
+        .lab-footer {
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -367,38 +349,34 @@
             border-top: 1px solid #E2E8F0;
         }
         .lab-price-label {
-            font-size: 11px;
+            font-size: 10px;
             color: #94a3b8;
             display: block;
         }
         .lab-price-val {
-            font-size: 18px;
+            font-size: 15px;
             font-weight: 700;
             color: #0f172a;
         }
         .lab-price-unit {
-            font-size: 12px;
+            font-size: 11px;
             color: #64748b;
             font-weight: 400;
         }
         .btn-detail {
-            padding: 10px 20px;
+            padding: 8px 14px;
             background: #334EAC;
             color: #ffffff;
             border-radius: 8px;
             text-decoration: none;
-            font-size: 12px;
+            font-size: 11px;
             font-weight: 700;
             display: flex;
             align-items: center;
-            gap: 8px;
-            transition: background 0.2s;
-        }
-        .btn-detail:hover {
-            background: #253a8a;
+            gap: 6px;
         }
 
-        /* --- FOOTER & PARTNERS (Dari CSS Beranda Kamu) --- */
+        /* --- FOOTER --- */
         .partners-row {
             display: flex;
             justify-content: space-between;
@@ -421,6 +399,7 @@
             font-size: 12px;
             font-weight: 700;
         }
+
         .footer-grid {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
@@ -446,6 +425,10 @@
             font-size: 12px;
             text-decoration: none;
         }
+        .footer-links a:hover {
+            color: #334EAC;
+        }
+
         .footer-bottom {
             padding: 20px 0 30px 0;
             border-top: 1px solid #E2E8F0;
@@ -454,259 +437,189 @@
             font-size: 11px;
             color: #94a3b8;
         }
-        .custom-pagination {
-    display: flex;
-    justify-content: center;
-    margin: 40px 0;
-}
-.pagination-wrapper {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    background: #EBF3FF;
-    padding: 6px 12px;
-    border-radius: 9999px;
-}
-.page-btn, .page-num {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 36px;
-    height: 36px;
-    border-radius: 50%;
-    text-decoration: none;
-    font-size: 13px;
-    font-weight: 600;
-    color: #1e293b;
-    transition: all 0.2s;
-}
-.page-num.active {
-    background: #334EAC;
-    color: #ffffff;
-}
-.page-num:hover:not(.active), .page-btn:hover:not(.disabled) {
-    background: #DCE8FB;
-    color: #334EAC;
-}
-.page-btn.disabled {
-    color: #94a3b8;
-    cursor: not-allowed;
-}
     </style>
 </head>
 <body>
 
     <div class="container">
 
-        <!-- NAVBAR CAPSULE -->
+        <!-- NAVBAR -->
         <div class="navbar-wrapper">
             <nav class="navbar">
-                <a href="{{ route('home') }}" class="nav-brand">
-                    <img src="{{ asset('images/logo-palapa.jpg') }}" alt="PALAPA Logo" onerror="this.src='https://placehold.co/42x42?text=P'">
+                <a href="{{ url('/') }}" class="nav-brand">
+                    <img src="{{ asset('images/logo-palapa.jpg') }}" alt="PALAPA Logo">
                 </a>
 
                 <div class="nav-links">
-                    <a href="{{ route('home') }}" class="nav-link">Beranda</a>
+                    <a href="{{ url('/') }}" class="nav-link">Beranda</a>
+                    <!-- Katalog Lab sekarang menjadi class "active" (ditandai dengan warna biru) -->
                     <a href="{{ route('labs.index') }}" class="nav-link active">Katalog Lab</a>
-                    <a href="#" class="nav-link">Instrumen Riset</a>
-                    <a href="#" class="nav-link">Pusat Bantuan</a>
+                    <a href="{{ route('labs.index') }}" class="nav-link">Instrumen Riset</a>
+                    <!-- Tautan ke Pusat Bantuan -->
+                    <a href="{{ url('/pusat-bantuan') }}" class="nav-link">Pusat Bantuan</a>
                 </div>
 
                 <div class="nav-search">
-                    <form action="{{ route('labs.index') }}" method="GET">
-                        <input type="text" name="search" placeholder="Pencarian..." value="{{ request('search') }}">
+                    <form action="{{ route('labs.index') }}" method="GET" style="margin: 0;">
+                        <input type="text" name="search" placeholder="Pencarian" autocomplete="off">
                         <i class="fa-solid fa-magnifying-glass"></i>
                     </form>
                 </div>
 
                 <div class="nav-actions">
-                    <a href="#" class="icon-btn" title="Keranjang"><i class="fa-solid fa-cart-shopping"></i></a>
-                    <a href="#" class="icon-btn" title="Profil"><i class="fa-solid fa-user"></i></a>
+                    <a href="{{ url('/riwayat') }}" class="icon-btn" title="Riwayat"><i class="fa-solid fa-cart-shopping"></i></a>
+                    <a href="{{ url('/login') }}" class="icon-btn" title="Masuk Akun"><i class="fa-solid fa-user"></i></a>
                 </div>
             </nav>
         </div>
 
-        <!-- FILTER CARD -->
-        <div class="filter-section">
-            <div class="filter-header">
-                <button class="btn-filter-toggle">
-                    <i class="fa-solid fa-sliders"></i> Filter Pencarian Laboratorium
-                </button>
-                <div class="badge-kan-top">
-                    <i class="fa-solid fa-circle-check"></i> ISO 17025 Accredited Research Labs
-                </div>
-            </div>
-
-            <form action="{{ route('labs.index') }}" method="GET" class="filter-form">
-                <div class="form-group">
-                    <label><i class="fa-solid fa-magnifying-glass"></i> Kata Kunci Pencarian</label>
-                    <div class="input-box">
-                        <i class="fa-solid fa-search"></i>
-                        <input type="text" name="search" class="form-control" placeholder="Cari nama lab, universitas, atau fakultas..." value="{{ request('search') }}">
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label><i class="fa-solid fa-filter"></i> Kategori Bidang Riset</label>
-                    <div class="input-box">
-                        <select name="category" class="form-control">
-                            <option value="all">Semua Kategori</option>
-                            <option value="Material & Kimia" {{ request('category') == 'Material & Kimia' ? 'selected' : '' }}>Material & Kimia</option>
-                            <option value="Bioteknologi" {{ request('category') == 'Bioteknologi' ? 'selected' : '' }}>Bioteknologi</option>
-                            <option value="Energi Terbarukan" {{ request('category') == 'Energi Terbarukan' ? 'selected' : '' }}>Energi Terbarukan</option>
-                            <option value="Farmasi & Medis" {{ request('category') == 'Farmasi & Medis' ? 'selected' : '' }}>Farmasi & Medis</option>
-                            <option value="Nanoteknologi" {{ request('category') == 'Nanoteknologi' ? 'selected' : '' }}>Nanoteknologi</option>
-                        </select>
-                    </div>
-                </div>
-
-                <button type="submit" class="btn-search">
-                    <i class="fa-solid fa-filter"></i> Terapkan Filter
-                </button>
-            </form>
-        </div>
-
-        <!-- CATALOG HEADER -->
+        <!-- HEADER KATALOG -->
         <div class="catalog-header">
             <div>
-                <h2 class="section-title">Menampilkan Laboratorium Tersedia</h2>
-                <p class="section-desc">Fasilitas riset berstandar internasional dengan operasional instrumen siap reservasi</p>
+                <h1 class="catalog-header-title">Katalog Laboratorium & Instrumen</h1>
+                <p class="catalog-header-desc">Eksplorasi fasilitas riset terstandarisasi yang siap digunakan untuk menunjang penelitian Anda.</p>
             </div>
-            <div class="sort-label">
-                Urutkan: <strong style="color: #0f172a;">Jenis Rekomendasi (KAN)</strong>
+            <!-- Tombol jalan pintas menuju pusat bantuan -->
+            <div>
+                <a href="{{ url('/pusat-bantuan') }}" style="background: rgba(255,255,255,0.2); padding: 10px 20px; border-radius: 10px; color: #fff; text-decoration: none; font-size: 13px; font-weight: 600; backdrop-filter: blur(5px);">
+                    <i class="fa-solid fa-circle-question"></i> Panduan Reservasi
+                </a>
             </div>
         </div>
 
-        <!-- LIST HORIZONTAL LABORATORIUM -->
-        <div class="lab-list-horizontal">
-            @forelse($labs as $lab)
-            <div class="lab-card-item">
-                <!-- Image Wrapper -->
-                <div class="lab-item-img-wrapper">
-                    <img src="https://images.unsplash.com/photo-1562774053-701939374585?q=80&w=600&auto=format&fit=crop" class="lab-item-img" alt="{{ $lab->lab_name }}">
-                    <div class="badge-kan-card"><i class="fa-solid fa-circle-check"></i> ISO 17025 / KAN</div>
-                    <div class="badge-location-card"><i class="fa-solid fa-location-dot"></i> {{ $lab->campus_name }}</div>
-                </div>
-
-                <!-- Info Content -->
-                <div class="lab-item-content">
-                    <div>
-                        <div class="lab-institution-row">
-                            <div class="lab-institution"><i class="fa-solid fa-university"></i> {{ $lab->faculty }}</div>
-                            <div class="lab-rating"><i class="fa-solid fa-star"></i> 4.9 <span>(128)</span></div>
-                        </div>
-
-                        <h3 class="lab-name-title">{{ $lab->lab_name }}</h3>
-                        <p class="lab-item-desc">{{ $lab->address_description ?? 'Laboratorium riset berkualitas tinggi dengan dukungan instrumen presisi tinggi untuk kebutuhan akademik & industri.' }}</p>
-
-                        <div class="lab-tags">
-                            <span class="lab-tag">{{ $lab->category }}</span>
-                            <span class="lab-tag"><i class="fa-solid fa-users me-1"></i> Kapasitas {{ $lab->capacity }} orang</span>
-                        </div>
+        <!-- SEARCH FORM CARD -->
+        <section class="search-card">
+            <form action="{{ route('labs.index') }}" method="GET" class="search-form">
+                <div class="form-group">
+                    <label><i class="fa-solid fa-location-dot"></i> LOKASI / KAMPUS</label>
+                    <div class="input-box">
+                        <i class="fa-solid fa-building-columns"></i>
+                        <input type="text" name="location" class="form-control" placeholder="Pilih Kota / Univ (misal: ITB, UI, UGM)..." value="{{ request('location') }}">
                     </div>
+                </div>
+                <div class="form-group">
+                    <label><i class="fa-solid fa-microscope"></i> INSTRUMEN / BIDANG</label>
+                    <div class="input-box">
+                        <i class="fa-solid fa-vial"></i>
+                        <input type="text" name="equipment" class="form-control" placeholder="Nama alat (FE-SEM, XRD, NMR, GC-MS)..." value="{{ request('equipment') }}">
+                    </div>
+                </div>
+                <div class="form-group" style="flex: 0.5;">
+                    <label><i class="fa-solid fa-tag"></i> MAKS. TARIF</label>
+                    <div class="input-box">
+                        <input type="number" name="max_price" class="form-control" style="padding-left: 14px;" placeholder="IDR" value="{{ request('max_price') }}">
+                    </div>
+                </div>
+                <button type="submit" class="btn-search">Filter Lab <i class="fa-solid fa-filter"></i></button>
+            </form>
 
-                    <!-- Footer Row -->
-                    <div class="lab-item-footer">
+            <div class="filter-tags">
+                <span class="tag-title">KATEGORI:</span>
+                <a href="{{ route('labs.index', ['filter' => 'Mikroskopi Elektron']) }}" class="tag">Mikroskopi Elektron</a>
+                <a href="{{ route('labs.index', ['filter' => 'Spektrometri Massa']) }}" class="tag">Spektrometri Massa</a>
+                <a href="{{ route('labs.index', ['filter' => 'Tersedia Hari Ini']) }}" class="tag">Tersedia Hari Ini</a>
+                <a href="{{ route('labs.index', ['filter' => 'Didampingi Teknisi']) }}" class="tag">Didampingi Teknisi</a>
+                <a href="{{ route('labs.index', ['filter' => 'Akreditasi KAN']) }}" class="tag">Akreditasi KAN</a>
+            </div>
+        </section>
+
+        <!-- KATALOG GRID (DAFTAR LAB) -->
+        <section>
+            <div class="catalog-grid">
+                @forelse($labs ?? [] as $lab)
+                <div class="lab-card">
+                    <div class="lab-card-img-wrapper">
+                        <!-- Menggunakan foto default/placeholder jika belum ada foto -->
+                        <img src="https://images.unsplash.com/photo-1532094349884-543bc11b234d?q=80&w=600&auto=format&fit=crop" class="lab-card-img" alt="{{ $lab->lab_name }}">
+                        <div class="badge-kan"><i class="fa-solid fa-circle-check"></i> KAN Accredited</div>
+                        <div class="badge-location"><i class="fa-solid fa-location-dot"></i> {{ $lab->campus_name ?? 'Fasilitas Terpadu' }}</div>
+                    </div>
+                    <div class="lab-card-body">
                         <div>
-                            <span class="lab-price-label">Mulai dari</span>
-                            <div class="lab-price-val">Rp {{ number_format($lab->base_price_per_session, 0, ',', '.') }} <span class="lab-price-unit">/ sesi</span></div>
+                            <div class="lab-institution-row">
+                                <div class="lab-institution"><i class="fa-solid fa-circle"></i> {{ $lab->faculty ?? 'Pusat Studi' }}</div>
+                                <div class="lab-rating"><i class="fa-solid fa-star"></i> 5.0 <span>(76)</span></div>
+                            </div>
+                            <h3 class="lab-name">{{ $lab->lab_name }}</h3>
+                            <div class="lab-tags">
+                                <span class="lab-tag">{{ $lab->category ?? 'Layanan Pengujian' }}</span>
+                                <span class="lab-tag">Kapasitas {{ $lab->capacity ?? '1' }} Sampel</span>
+                            </div>
                         </div>
-                        <a href="{{ route('labs.show', $lab->lab_id) }}" class="btn-detail">Lihat Detail & Sewa <i class="fa-solid fa-arrow-right"></i></a>
+                        <div class="lab-footer">
+                            <div>
+                                <span class="lab-price-label">Mulai dari</span>
+                                <div class="lab-price-val">Rp {{ number_format($lab->base_price_per_session ?? 0, 0, ',', '.') }} <span class="lab-price-unit">/ sesi</span></div>
+                            </div>
+                            <a href="{{ route('labs.show', $lab->lab_id ?? 1) }}" class="btn-detail">Lihat Detail <i class="fa-solid fa-arrow-right"></i></a>
+                        </div>
                     </div>
                 </div>
+                @empty
+                <div style="grid-column: 1 / -1; text-align: center; padding: 40px 0;">
+                    <i class="fa-solid fa-microscope" style="font-size: 40px; color: #cbd5e1; margin-bottom: 16px;"></i>
+                    <h3 style="font-size: 18px; color: #0f172a; margin-bottom: 8px;">Laboratorium Tidak Ditemukan</h3>
+                    <p style="color: #64748b; font-size: 14px;">Belum ada data laboratorium atau instrumen yang sesuai dengan pencarian Anda.</p>
+                </div>
+                @endforelse
             </div>
-            @empty
-            <div style="text-align: center; padding: 40px; background: #ffffff; border-radius: 16px; border: 1px solid #E2E8F0;">
-                <p style="color: #64748b; font-size: 14px; margin-bottom: 12px;">Tidak ada laboratorium yang sesuai dengan kriteria pencarian kamu.</p>
-                <a href="{{ route('labs.index') }}" class="btn-detail" style="display: inline-flex;">Reset Filter</a>
-            </div>
-            @endforelse
-        </div>
+        </section>
 
-        <!-- PAGINATION -->
-        <div class="custom-pagination">
-    @if ($labs->hasPages())
-        <div class="pagination-wrapper">
-            {{-- Tombol Prev --}}
-            @if ($labs->onFirstPage())
-                <span class="page-btn disabled"><i class="fa-solid fa-chevron-left"></i></span>
-            @else
-                <a href="{{ $labs->previousPageUrl() }}" class="page-btn"><i class="fa-solid fa-chevron-left"></i></a>
-            @endif
+    </div>
 
-            {{-- Angka Halaman --}}
-            @foreach ($labs->getUrlRange(1, $labs->lastPage()) as $page => $url)
-                @if ($page == $labs->currentPage())
-                    <span class="page-num active">{{ $page }}</span>
-                @else
-                    <a href="{{ $url }}" class="page-num">{{ $page }}</a>
-                @endif
-            @endforeach
-
-            {{-- Tombol Next --}}
-            @if ($labs->hasMorePages())
-                <a href="{{ $labs->nextPageUrl() }}" class="page-btn"><i class="fa-solid fa-chevron-right"></i></a>
-            @else
-                <span class="page-btn disabled"><i class="fa-solid fa-chevron-right"></i></span>
-            @endif
-        </div>
-    @endif
-</div>
-
-        <!-- MITRA & PARTNERS ROW -->
+    <!-- FOOTER -->
+    <div class="container">
         <div class="partners-row">
-            <span class="partners-label">MITRA & TERINTEGRASI BERSAMA</span>
+            <div class="partners-label">MITRA & TERAKREDITASI RESMI:</div>
             <div class="partners-list">
-                <span>BRIN RI</span>
-                <span>ISO 17025</span>
-                <span>Kementerian Pendidikan</span>
-                <span>ITS Lab</span>
-                <span>ITB Lab</span>
+                <span>KAN ISO 17025</span>
+                <span>BRIN Partner</span>
+                <span>Science Hunter ID</span>
+                <span>Universitas Indonesia</span>
+                <span>ITB Labs</span>
             </div>
         </div>
 
-        <!-- FOOTER GRID -->
         <div class="footer-grid">
             <div>
-                <div class="footer-col-title">Pusat Akses Lab</div>
+                <div class="footer-col-title">MARKETPLACE SAINS</div>
                 <ul class="footer-links">
-                    <li><a href="#">Tentang Kami</a></li>
-                    <li><a href="#">Layanan Riset</a></li>
-                    <li><a href="#">Mitra Kampus</a></li>
+                    <li><a href="{{ route('labs.index') }}">Layanan Uji</a></li>
+                    <li><a href="{{ route('labs.index') }}">Sewa Instrumen Canggih</a></li>
+                    <li><a href="{{ route('labs.index') }}">Jasa Laboran</a></li>
                 </ul>
             </div>
             <div>
-                <div class="footer-col-title">Dukungan Riset</div>
+                <div class="footer-col-title">DUKUNGAN RISET</div>
                 <ul class="footer-links">
-                    <li><a href="#">Panduan Sewa</a></li>
-                    <li><a href="#">Sertifikasi Sampel</a></li>
-                    <li><a href="#">Asisten Lab</a></li>
+                    <li><a href="{{ url('/pusat-bantuan') }}">Bantuan Peneliti</a></li>
+                    <li><a href="{{ url('/pusat-bantuan') }}">Pedoman Keselamatan Lab</a></li>
+                    <li><a href="{{ url('/login') }}">Integrasi Hibah & SPK</a></li>
                 </ul>
             </div>
             <div>
-                <div class="footer-col-title">Pengajuan Fasilitas</div>
+                <div class="footer-col-title">PENGELOLA FASILITAS</div>
                 <ul class="footer-links">
-                    <li><a href="#">Daftarkan Lab Anda</a></li>
-                    <li><a href="#">Integrasi API</a></li>
-                    <li><a href="#">Akses Hibah</a></li>
+                    <li><a href="{{ url('/login') }}">Daftarkan Lab Anda</a></li>
+                    <li><a href="{{ route('labs.index') }}">Standar Kalibrasi</a></li>
+                    <li><a href="{{ url('/pusat-bantuan') }}">Asuransi Alat</a></li>
                 </ul>
             </div>
             <div>
-                <div class="footer-col-title">Legal & Bantuan</div>
+                <div class="footer-col-title">LEGAL & KONTAK</div>
                 <ul class="footer-links">
+                    <!-- Link legal dibiarkan kosong sesuai kesepakatan awal -->
                     <li><a href="#">Kebijakan Privasi</a></li>
                     <li><a href="#">Syarat & Ketentuan</a></li>
-                    <li><a href="#">Hubungi Customer Service</a></li>
+                    <li><a href="#">Kontak PALAPA Indonesia</a></li>
                 </ul>
             </div>
         </div>
 
-        <!-- FOOTER BOTTOM -->
         <div class="footer-bottom">
-            <span>&copy; 2026 PALAPA Platform. Hak Cipta Dilindungi Undang-Undang.</span>
-            <span>Didukung oleh Kementerian Riset dan Pendidikan Tinggi</span>
+            <div>© 2026 PALAPA Hak Cipta Dilindungi. Platform Kolaborasi & Sewa Lab Riset Nasional.</div>
+            <div>Mendukung Kemandirian Riset & Inovasi Indonesia</div>
         </div>
-
     </div>
 
 </body>
