@@ -74,6 +74,8 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/riwayat', function () {
         return view('client.riwayat');
     })->name('riwayat');
-    
+
     // Tambahkan rute lain yang wajib login di sini (misal: checkout, profil)
+
+    Route::get('/bookings/step1/{lab_id}', [App\Http\Controllers\Web\BookingController::class, 'step1'])->name('bookings.step1');
 });
