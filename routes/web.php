@@ -78,4 +78,10 @@ Route::middleware(['auth'])->group(function () {
     // Tambahkan rute lain yang wajib login di sini (misal: checkout, profil)
 
     Route::get('/bookings/step1/{lab_id}', [App\Http\Controllers\Web\BookingController::class, 'step1'])->name('bookings.step1');
+
+    Route::get('/bookings/step2/{lab_id}', [App\Http\Controllers\Web\BookingController::class, 'step2'])->name('bookings.step2');
+
+    Route::get('/bookings/step3/{lab_id}', [App\Http\Controllers\Web\BookingController::class, 'step3'])->name('bookings.step3');
+    
+    Route::post('/bookings', [App\Http\Controllers\Web\BookingController::class, 'store'])->name('bookings.store');
 });

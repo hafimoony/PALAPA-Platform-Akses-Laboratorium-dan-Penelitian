@@ -586,6 +586,38 @@
     function openPicker() { $('fileInput').click(); }
     $('uploadBox').addEventListener('click', function (e) { if (e.target.id !== 'btnFile') openPicker(); });
     $('btnFile').addEventListener('click', openPicker);
+    /* Simpan file di IndexedDB agar tetap ada saat pindah ke Tahap 2 / 3 */
+    function idbOpen(cb) {
+        try {
+            var r = indexedDB.open('palapa', 1);
+            r.onupgradeneeded = function () { r.result.createObjectStore('files'); };
+            r.onsuccess = function () { cb(r.result); };
+            r.onerror = function () { cb(null); };
+        } catch (e) { cb(null); }
+    }
+    function idbPut(file) {
+        idbOpen(function (db) {
+            if (!db) return;
+            try { db.transaction('files', 'readwrite').objectStore('files').put(file, 'proposal'); } catch (e) {}
+        });
+    }
+    function idbGet(cb) {
+        idbOpen(function (db) {
+            if (!db) { cb(null); return; }
+            try {
+                var q = db.transaction('files', 'readonly').objectStore('files').get('proposal');
+                q.onsuccess = function () { cb(q.result || null); };
+                q.onerror = function () { cb(null); };
+            } catch (e) { cb(null); }
+        });
+    }
+    function applyFile(f) {
+        chosenFile = f;
+        setErr('f-file', false);
+        $('fileName').textContent = f.name;
+        $('fileMeta').innerHTML = fmtSize(f.size) + ' &bull; <em>Verifikasi Siap</em>';
+        $('btnFile').textContent = 'Ganti File';
+    }
     $('fileInput').addEventListener('change', function () {
         var f = this.files[0];
         if (!f) return;
@@ -594,11 +626,8 @@
             setErr('f-file', true, 'Ukuran file maksimal 5 MB.', 'fileErr');
             return;
         }
-        chosenFile = f;
-        setErr('f-file', false);
-        $('fileName').textContent = f.name;
-        $('fileMeta').innerHTML = fmtSize(f.size) + ' &bull; <em>Verifikasi Siap</em>';
-        $('btnFile').textContent = 'Ganti File';
+        applyFile(f);
+        idbPut(f);
     });
 
     $('btnNext').addEventListener('click', function () {
@@ -672,6 +701,10 @@
     $('dateErr').style.display = 'none';
     renderCal();
     renderShifts();
+
+    if (saved && saved.proposal_file_name) {
+        idbGet(function (f) { if (f && f.name === saved.proposal_file_name) applyFile(f); });
+    }
 })();
 </script>
 
