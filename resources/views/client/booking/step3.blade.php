@@ -41,6 +41,8 @@
             'store' => $safeRoute('bookings.store') ?: url('/bookings'),
             'riwayat' => url('/riwayat'),
             'home' => url('/'),
+            'bookings' => url('/bookings'),
+            'help' => url('/pusat-bantuan'),
         ],
         'csrf' => csrf_token(),
     ];
@@ -200,21 +202,82 @@
         .help-card span { font-size: 12.5px; color: #475569; }
         .help-card span b { color: #334EAC; }
 
-        /* MODAL SUKSES */
-        .overlay { display: none; position: fixed; inset: 0; background: rgba(9,31,91,.55); z-index: 100; align-items: center; justify-content: center; }
+        /* POPUP INSTRUKSI PEMBAYARAN */
+        .overlay { display: none; position: fixed; inset: 0; background: rgba(9,31,91,.55); z-index: 100; align-items: center; justify-content: center; padding: 20px; }
         .overlay.show { display: flex; }
-        .modal { background: #fff; border-radius: 22px; width: 520px; padding: 36px 40px 32px; text-align: center; box-shadow: 0 24px 60px rgba(9,31,91,.35); }
-        .modal-icon { width: 64px; height: 64px; border-radius: 50%; background: #0b4a38; color: #fff; display: flex; align-items: center; justify-content: center; font-size: 26px; margin: 0 auto 18px; }
-        .modal h2 { font-size: 22px; font-weight: 800; color: #091F5B; margin-bottom: 6px; }
-        .modal p { font-size: 13.5px; color: #64748b; line-height: 1.6; }
-        .modal-code { font-family: 'JetBrains Mono', monospace; font-size: 26px; font-weight: 700; color: #334EAC; background: #EEF5FF; border: 2px dashed #A9C0EA; border-radius: 12px; padding: 14px; margin: 20px 0 16px; letter-spacing: 1px; }
-        .modal-rows { text-align: left; background: #F8FAFF; border: 1px solid #D6E4FA; border-radius: 12px; padding: 14px 18px; margin-bottom: 18px; }
-        .modal-rows div { display: flex; justify-content: space-between; font-size: 13px; padding: 4px 0; color: #475569; }
-        .modal-rows b { color: #0f172a; }
-        .modal-actions { display: flex; gap: 12px; margin-top: 22px; }
-        .modal-actions a { flex: 1; padding: 13px; border-radius: 10px; font-size: 13.5px; font-weight: 600; }
-        .modal-actions .p { background: #334EAC; color: #fff; }
-        .modal-actions .s { background: #fff; color: #334155; border: 1px solid #D6E4FA; }
+        .pm { background: #fff; border-radius: 20px; width: 500px; max-height: 94vh; overflow-y: auto; box-shadow: 0 24px 60px rgba(9,31,91,.35); border: 1px solid #D6DCEE; }
+        .pm-head { display: flex; align-items: center; gap: 16px; padding: 20px 22px; background: #F3F5FD; border-bottom: 1px solid #D6DCEE; }
+        .pm-back { color: #1d3fae; font-size: 20px; width: 28px; }
+        .pm-title { flex: 1; }
+        .pm-title h2 { font-size: 21px; font-weight: 800; color: #0f172a; line-height: 1.2; }
+        .pm-sub { display: flex; align-items: center; gap: 8px; margin-top: 4px; font-size: 12.5px; }
+        .pm-sub .rc { font-family: 'JetBrains Mono', monospace; font-weight: 700; color: #0a2a8a; }
+        .pm-sub .iso { color: #0b6b4b; font-weight: 700; }
+        .pm-receipt { width: 38px; height: 38px; border: 1px solid #D6DCEE; background: #fff; border-radius: 9px; color: #334155; display: flex; align-items: center; justify-content: center; font-size: 16px; cursor: pointer; }
+        .pm-timer { display: flex; justify-content: space-between; align-items: center; padding: 11px 22px; background: #F3F5FD; border-bottom: 1px solid #D6DCEE; font-size: 13px; color: #475569; }
+        .pm-timer .dot { display: inline-block; width: 9px; height: 9px; border-radius: 50%; background: #b91c1c; margin-right: 8px; }
+        .pm-timer .cd { font-family: 'JetBrains Mono', monospace; font-weight: 700; color: #b91c1c; font-size: 14px; margin-left: 6px; }
+        .pm-timer b { color: #0f172a; }
+        .pm-body { padding: 20px 22px 16px; }
+        .pm-card { background: #F3F5FD; border: 1px solid #D6DCEE; border-radius: 14px; padding: 14px 14px 14px; margin-bottom: 14px; }
+        .pm-vhead { display: flex; align-items: center; gap: 10px; padding-bottom: 10px; border-bottom: 1px solid #D6DCEE; margin-bottom: 12px; }
+        .pm-vcode { background: #1d3fae; color: #fff; font-size: 13px; font-weight: 800; padding: 5px 12px; border-radius: 4px; }
+        .pm-vname { font-size: 14px; font-weight: 800; color: #0f172a; }
+        .pm-vname span { font-family: 'JetBrains Mono', monospace; font-weight: 500; font-size: 12px; color: #64748b; margin-left: 6px; }
+        .pm-auto { margin-left: auto; background: #86f0c4; color: #064e3b; font-size: 12.5px; font-weight: 800; padding: 4px 12px; border-radius: 6px; }
+        .pm-box { background: #fff; border-radius: 10px; padding: 12px 14px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+        .pm-box.dash { border: 1.5px dashed #94a3b8; }
+        .pm-box.solid { border: 1px solid #CBD5E1; margin-bottom: 0; }
+        .pm-box small { display: block; font-size: 13px; color: #475569; margin-bottom: 8px; }
+        .pm-box .big { font-family: 'JetBrains Mono', monospace; font-size: 22px; font-weight: 700; color: #0a2a8a; letter-spacing: .5px; }
+        .pm-box .big.dark { color: #0f172a; }
+        .pm-box .inc { font-size: 12px; color: #0b6b4b; font-weight: 600; position: absolute; right: 0; top: 0; }
+        .pm-copy { background: #F3F5FD; border: 1px solid #94a3b8; border-radius: 7px; color: #0a2a8a; font-family: inherit; font-size: 13.5px; font-weight: 700; padding: 8px 14px; cursor: pointer; display: flex; align-items: center; gap: 8px; white-space: nowrap; }
+        .pm-copy.ok { color: #0b6b4b; border-color: #0b6b4b; }
+        .pm-total-wrap { position: relative; }
+        .pm-qr { display: flex; flex-direction: column; align-items: center; gap: 10px; background: #fff; border: 1.5px dashed #94a3b8; border-radius: 10px; padding: 16px; margin-bottom: 10px; }
+        .pm-qr svg { width: 190px; height: 190px; }
+        .pm-qr .qrc { font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #475569; }
+        .pm-lab { border: 1px solid #CBD5E1; border-radius: 10px; margin-bottom: 14px; background: #F3F5FD; }
+        .pm-lab-top { display: flex; justify-content: space-between; align-items: center; padding: 13px 16px; cursor: pointer; }
+        .pm-lab-top strong { font-size: 14.5px; font-weight: 800; color: #0f172a; display: flex; align-items: center; gap: 10px; }
+        .pm-lab-top strong i { color: #334155; }
+        .pm-lab-top span { color: #1d3fae; font-size: 13.5px; font-weight: 600; }
+        .pm-lab-detail { display: none; padding: 0 16px 14px; font-size: 12.5px; color: #475569; line-height: 1.9; }
+        .pm-lab.open .pm-lab-detail { display: block; }
+        .pm-lab.open .pm-lab-top span i { transform: rotate(180deg); }
+        .pm-lab-detail b { color: #0f172a; }
+        .pm-how { border: 1px solid #CBD5E1; border-radius: 12px; padding: 16px; margin-bottom: 16px; }
+        .pm-how-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; }
+        .pm-how-top h4 { white-space: nowrap; font-size: 14.5px; font-weight: 800; color: #0f172a; display: flex; align-items: center; gap: 8px; }
+        .pm-tabs { display: flex; background: #EEF1F8; border: 1px solid #CBD5E1; border-radius: 8px; padding: 3px; }
+        .pm-tab { white-space: nowrap; border: none; background: transparent; font-family: inherit; font-size: 13px; font-weight: 600; color: #64748b; padding: 6px 14px; border-radius: 6px; cursor: pointer; }
+        .pm-tab.on { background: #0a2a8a; color: #fff; font-weight: 800; }
+        .pm-step { display: flex; gap: 12px; align-items: flex-start; font-size: 13.5px; color: #1e293b; line-height: 1.55; margin-bottom: 11px; }
+        .pm-step .n { width: 24px; height: 24px; border-radius: 50%; background: #1d3fae; color: #fff; font-size: 12px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+        .pm-step code { font-family: 'JetBrains Mono', monospace; font-weight: 700; color: #0a2a8a; }
+        .pm-check { width: 100%; background: #0a2a8a; color: #fff; border: none; border-radius: 8px; padding: 15px; font-family: inherit; font-size: 15.5px; font-weight: 700; display: flex; align-items: center; justify-content: center; gap: 12px; cursor: pointer; }
+        .pm-check:hover:not(:disabled) { background: #081f6b; }
+        .pm-check:disabled { opacity: .55; cursor: not-allowed; }
+        .pm-msg { display: none; margin-top: 10px; font-size: 12.5px; line-height: 1.5; padding: 9px 12px; border-radius: 8px; }
+        .pm-msg.info { display: block; background: #EEF5FF; color: #334EAC; }
+        .pm-msg.err { display: block; background: #FDECEC; color: #b91c1c; }
+        .pm-msg.sim { display: block; background: #FFF7E0; color: #8a5a00; }
+        .pm-foot { display: flex; justify-content: space-between; align-items: center; border-top: 1px solid #E2E8F0; margin-top: 14px; padding-top: 12px; font-size: 13px; color: #475569; }
+        .pm-foot a { color: #475569; display: flex; align-items: center; gap: 8px; }
+        .pm-foot a.wa { color: #0b6b4b; font-weight: 700; }
+        .pm-done { text-align: center; padding: 18px 8px 8px; }
+        .pm-done .ic { width: 68px; height: 68px; border-radius: 50%; background: #0b4a38; color: #fff; display: flex; align-items: center; justify-content: center; font-size: 28px; margin: 0 auto 16px; }
+        .pm-done h3 { font-size: 21px; font-weight: 800; color: #091F5B; margin-bottom: 6px; }
+        .pm-done p { font-size: 13.5px; color: #64748b; line-height: 1.6; }
+        .pm-done .code { font-family: 'JetBrains Mono', monospace; font-size: 26px; font-weight: 700; color: #334EAC; background: #EEF5FF; border: 2px dashed #A9C0EA; border-radius: 12px; padding: 14px; margin: 18px 0 14px; letter-spacing: 1px; }
+        .pm-done .rows { text-align: left; background: #F8FAFF; border: 1px solid #D6E4FA; border-radius: 12px; padding: 12px 16px; margin-bottom: 16px; }
+        .pm-done .rows div { display: flex; justify-content: space-between; font-size: 13px; padding: 4px 0; color: #475569; }
+        .pm-done .rows b { color: #0f172a; }
+        .pm-done .btns { display: flex; gap: 12px; }
+        .pm-done .btns a { flex: 1; padding: 13px; border-radius: 10px; font-size: 13.5px; font-weight: 600; }
+        .pm-done .btns .p { background: #334EAC; color: #fff; }
+        .pm-done .btns .s { background: #fff; color: #334155; border: 1px solid #D6E4FA; }
 
         /* FOOTER */
         .partners-row { display: flex; justify-content: space-between; align-items: center; padding-bottom: 24px; border-bottom: 1px solid #E2E8F0; margin-bottom: 30px; }
@@ -392,23 +455,88 @@
     </div>
 </div>
 
-<!-- MODAL SUKSES -->
+<!-- POPUP INSTRUKSI PEMBAYARAN -->
 <div class="overlay" id="overlay">
-    <div class="modal">
-        <div class="modal-icon"><i class="fa-solid fa-check"></i></div>
-        <h2>Reservasi Berhasil Diajukan</h2>
-        <p>Simpan kode reservasi di bawah ini. Pengajuan Anda sedang ditinjau oleh pengelola laboratorium.</p>
-        <div class="modal-code" id="mCode">-</div>
-        <div class="modal-rows">
-            <div><span>No. Invoice</span><b id="mInv">-</b></div>
-            <div><span>Kanal Pembayaran</span><b id="mVendor">-</b></div>
-            <div><span>Total Tagihan</span><b id="mTotal">-</b></div>
-            <div><span>Batas Waktu Invoice</span><b id="mExp">-</b></div>
+    <div class="pm" id="pm">
+        <div class="pm-head">
+            <a href="#" class="pm-back" id="pmBack" title="Ke riwayat reservasi"><i class="fa-solid fa-arrow-left"></i></a>
+            <div class="pm-title">
+                <h2 id="pmTitle">Instruksi Pembayaran</h2>
+                <div class="pm-sub"><span class="rc" id="pmCode">#-</span><span>&bull;</span><span class="iso"><i class="fa-solid fa-certificate"></i> ISO 17025</span></div>
+            </div>
+            <div class="pm-receipt" id="pmReceipt" title="Rincian reservasi"><i class="fa-solid fa-receipt"></i></div>
         </div>
-        <p style="font-size:12.5px;">Pembayaran dapat dilakukan setelah pengajuan Anda disetujui oleh staf laboratorium.</p>
-        <div class="modal-actions">
-            <a href="#" class="p" id="mRiwayat">Lihat Riwayat Reservasi</a>
-            <a href="#" class="s" id="mHome">Kembali ke Beranda</a>
+        <div class="pm-timer" id="pmTimer">
+            <span><i class="dot"></i>Sisa:<span class="cd" id="pmCd">--:--:--</span></span>
+            <span><i class="fa-regular fa-calendar"></i> Jatuh Tempo: <b id="pmDue">-</b></span>
+        </div>
+
+        <div class="pm-body">
+            <!-- TAMPILAN BAYAR -->
+            <div id="viewPay">
+                <div class="pm-card">
+                    <div class="pm-vhead">
+                        <span class="pm-vcode" id="pmVcode">-</span>
+                        <span class="pm-vname" id="pmVname">-</span>
+                        <span class="pm-auto"><i class="fa-solid fa-bolt"></i> Otomatis</span>
+                    </div>
+                    <div id="pmPayBox"></div>
+                    <div class="pm-box solid">
+                        <div class="pm-total-wrap" style="flex:1;">
+                            <small>Total Tagihan</small>
+                            <div class="big dark" id="pmTotal">-</div>
+                        </div>
+                        <div style="text-align:right;">
+                            <div style="font-size:12px;color:#0b6b4b;font-weight:600;margin-bottom:8px;">PPN 11% Inc.</div>
+                            <button type="button" class="pm-copy" id="pmCopyTotal"><i class="fa-regular fa-copy"></i> Salin</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="pm-lab" id="pmLab">
+                    <div class="pm-lab-top" id="pmLabTop">
+                        <strong><i class="fa-solid fa-flask"></i> <span id="pmLabName">-</span></strong>
+                        <span>Detail <i class="fa-solid fa-chevron-down" style="font-size:11px;"></i></span>
+                    </div>
+                    <div class="pm-lab-detail" id="pmLabDetail"></div>
+                </div>
+
+                <div class="pm-how">
+                    <div class="pm-how-top">
+                        <h4><i class="fa-solid fa-book-open"></i> Cara Pembayaran Cepat</h4>
+                        <div class="pm-tabs" id="pmTabs"></div>
+                    </div>
+                    <div id="pmSteps"></div>
+                </div>
+
+                <button type="button" class="pm-check" id="pmCheck"><i class="fa-solid fa-rotate"></i> <span id="pmCheckText">Cek Status Pembayaran</span></button>
+                <div class="pm-msg" id="pmMsg"></div>
+            </div>
+
+            <!-- TAMPILAN LUNAS -->
+            <div id="viewDone" style="display:none;">
+                <div class="pm-done">
+                    <div class="ic"><i class="fa-solid fa-check"></i></div>
+                    <h3>Pembayaran Berhasil</h3>
+                    <p>Reservasi Anda sudah terkonfirmasi. E-Tiket masuk lab dapat dilihat di halaman riwayat reservasi.</p>
+                    <div class="code" id="dCode">-</div>
+                    <div class="rows">
+                        <div><span>No. Invoice</span><b id="dInv">-</b></div>
+                        <div><span>Kanal Pembayaran</span><b id="dVendor">-</b></div>
+                        <div><span>Total Dibayar</span><b id="dTotal">-</b></div>
+                    </div>
+                    <div class="btns">
+                        <a href="#" class="p" id="dRiwayat">Lihat Riwayat Reservasi</a>
+                        <a href="#" class="s" id="dHome">Kembali ke Beranda</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pm-foot">
+                <a href="tel:+62315992785"><i class="fa-solid fa-phone"></i> (031) 599-2785</a>
+                <a href="#" class="wa" id="pmWa"><i class="fa-regular fa-comment-dots"></i> WhatsApp Helpdesk</a>
+                <a href="#" id="pmDash"><i class="fa-solid fa-house"></i> Dashboard</a>
+            </div>
         </div>
     </div>
 </div>
@@ -469,13 +597,220 @@
     var rupiah = function (n) { return 'Rp ' + Math.round(n).toLocaleString('id-ID'); };
     var esc = function (t) { return String(t).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); };
 
+    /* ================= POPUP INSTRUKSI PEMBAYARAN ================= */
+    var cdTimer = null;
+
+    function copyText(text, btn) {
+        var done = function () {
+            var old = btn.innerHTML;
+            btn.classList.add('ok'); btn.innerHTML = '<i class="fa-solid fa-check"></i> Tersalin';
+            setTimeout(function () { btn.classList.remove('ok'); btn.innerHTML = old; }, 1500);
+        };
+        if (navigator.clipboard && window.isSecureContext) {
+            navigator.clipboard.writeText(text).then(done, done);
+        } else {
+            var ta = document.createElement('textarea'); ta.value = text; ta.style.position = 'fixed'; ta.style.opacity = '0';
+            document.body.appendChild(ta); ta.select();
+            try { document.execCommand('copy'); } catch (e) {}
+            document.body.removeChild(ta); done();
+        }
+    }
+
+    function dueLabel(iso) {
+        var d = new Date(iso);
+        if (isNaN(d.getTime())) return '-';
+        var parts = {};
+        new Intl.DateTimeFormat('id-ID', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit', hour12: false, timeZone: 'Asia/Jakarta' })
+            .formatToParts(d).forEach(function (x) { parts[x.type] = x.value; });
+        return parts.day + ' ' + parts.month + ', ' + parts.hour + '.' + parts.minute + ' WIB';
+    }
+
+    function howTabs(d, totalText) {
+        var kind = d.pay.kind, code = d.vendor.code, va = d.pay.code, merchant = d.vendor.merchant;
+        var vaTxt = '<code>' + esc(va.replace(/\s+/g, '')) + '</code>';
+        if (kind === 'qris') {
+            return [{ name: 'Scan QR', steps: [
+                'Buka aplikasi <b>e-wallet</b> atau <b>mobile banking</b> yang mendukung QRIS.',
+                'Pilih menu <b>Scan / Bayar</b> lalu arahkan kamera ke kode QR di atas.',
+                'Pastikan nominal <b>' + esc(totalText) + '</b> sesuai > Masukkan PIN, selesai.'
+            ] }];
+        }
+        if (kind === 'simponi') {
+            return [{ name: 'Transfer', steps: [
+                'Buka aplikasi mobile banking atau datang ke teller bank penerima <b>Kas BLU</b>.',
+                'Pilih <b>Pembayaran PNBP / Billing</b> > Input kode billing ' + vaTxt + '.',
+                'Konfirmasi tagihan <b>' + esc(totalText) + '</b> > Simpan bukti pembayaran untuk SPJ.'
+            ] }];
+        }
+        var names = {
+            MANDIRI: { app: "Livin' by Mandiri", tab: "Livin'", atm: 'ATM Mandiri', bank: 'Bank Mandiri' },
+            BCA:     { app: 'BCA mobile', tab: 'BCA mobile', atm: 'ATM BCA', bank: 'Bank BCA' },
+            BNI:     { app: 'BNI Mobile Banking', tab: 'BNI Mobile', atm: 'ATM BNI', bank: 'Bank BNI' },
+            BRIVA:   { app: 'BRImo', tab: 'BRImo', atm: 'ATM BRI', bank: 'Bank BRI' }
+        };
+        var n = names[code] || { app: 'aplikasi mobile banking', tab: 'Mobile', atm: 'ATM', bank: d.vendor.name };
+        var biller = 'PALAPA' + (merchant ? ' (' + esc(merchant) + ')' : '');
+        return [
+            { name: n.tab, steps: [
+                'Buka <b>' + esc(n.app) + '</b> > Pilih menu <b>Bayar</b>.',
+                'Cari biller <b>' + biller + '</b> > Input VA ' + vaTxt + '.',
+                'Konfirmasi tagihan <b>' + esc(totalText) + '</b> > Masukkan PIN, selesai.'
+            ] },
+            { name: 'ATM', steps: [
+                'Masukkan kartu dan PIN pada <b>' + esc(n.atm) + '</b>.',
+                'Pilih menu <b>Bayar / Virtual Account</b>.',
+                'Input nomor VA ' + vaTxt + ' > Konfirmasi tagihan <b>' + esc(totalText) + '</b>.'
+            ] },
+            { name: 'Bank Lain', steps: [
+                'Buka aplikasi bank Anda > Pilih <b>Transfer ke Bank Lain</b>.',
+                'Pilih bank tujuan <b>' + esc(n.bank) + '</b> > Input nomor VA ' + vaTxt + '.',
+                'Pastikan nominal <b>' + esc(totalText) + '</b> sesuai > Selesaikan transaksi.'
+            ] }
+        ];
+    }
+
+    function setMsg(type, text) {
+        var m = $('pmMsg');
+        m.className = 'pm-msg' + (type ? ' ' + type : '');
+        m.textContent = text || '';
+    }
+
+    function showPaid(d) {
+        $('viewPay').style.display = 'none';
+        $('viewDone').style.display = 'block';
+        $('pmTimer').style.display = 'none';
+        $('pmTitle').textContent = 'Pembayaran Berhasil';
+        $('dCode').textContent = d.booking_code;
+        $('dInv').textContent = d.invoice_number;
+        $('dVendor').textContent = d.vendor.name;
+        $('dTotal').textContent = rupiah(d.grand_total);
+        if (cdTimer) { clearInterval(cdTimer); cdTimer = null; }
+        try { sessionStorage.removeItem('palapa_payment'); } catch (e) {}
+    }
+
+    function showExpired() {
+        $('pmCd').textContent = '00:00:00';
+        $('pmCheck').disabled = true;
+        setMsg('err', 'Waktu pembayaran telah habis dan slot dilepas kembali. Silakan buat reservasi baru.');
+        if (cdTimer) { clearInterval(cdTimer); cdTimer = null; }
+        try { sessionStorage.removeItem('palapa_payment'); } catch (e) {}
+    }
+
+    function showPayment(d) {
+        var totalText = rupiah(d.grand_total);
+        $('overlay').classList.add('show');
+        $('pmBack').href = P.urls.riwayat; $('pmDash').href = P.urls.riwayat; $('pmWa').href = P.urls.help;
+        $('dRiwayat').href = P.urls.riwayat; $('dHome').href = P.urls.home;
+
+        $('pmCode').textContent = '#' + d.booking_code;
+        $('pmVcode').textContent = d.vendor.code.replace('_INSTANT', '');
+        var title = d.pay.kind === 'qris' ? 'QRIS PALAPA' : (d.pay.kind === 'simponi' ? 'Billing SIMPONI PALAPA' : 'VA PALAPA');
+        $('pmVname').innerHTML = esc(title) + (d.vendor.merchant ? '<span>(' + esc(d.vendor.merchant) + ')</span>' : '');
+        $('pmDue').textContent = dueLabel(d.expired_at);
+        $('pmTotal').textContent = totalText;
+        $('pmCopyTotal').onclick = function () { copyText(String(Math.round(d.grand_total)), this); };
+
+        // Kotak nomor VA / kode billing / QR
+        var box = '';
+        if (d.pay.kind === 'qris') {
+            box = '<div class="pm-qr">' + (d.pay.qr_svg ? d.pay.qr_svg : '<i class="fa-solid fa-qrcode" style="font-size:90px;color:#334155;"></i>') +
+                '<div class="qrc">' + esc(d.pay.code) + '</div></div>';
+        } else {
+            var grouped = d.pay.code.replace(/(\d{4})(?=\d)/g, '$1 ');
+            box = '<div class="pm-box dash"><div><small>' + esc(d.pay.label) + '</small><div class="big">' + esc(grouped) + '</div></div>' +
+                '<button type="button" class="pm-copy" id="pmCopyCode"><i class="fa-regular fa-copy"></i> Salin</button></div>';
+        }
+        $('pmPayBox').innerHTML = box;
+        if ($('pmCopyCode')) $('pmCopyCode').onclick = function () { copyText(d.pay.code, this); };
+
+        // Detail reservasi
+        $('pmLabName').textContent = d.lab_name || P.lab.name;
+        $('pmLabDetail').innerHTML =
+            '<div><b>Instansi:</b> ' + esc(d.institution || '-') + '</div>' +
+            '<div><b>Jadwal:</b> ' + esc(d.date_label || '-') + '</div>' +
+            '<div><b>Sesi:</b> ' + esc(d.shift_label || '-') + '</div>' +
+            '<div><b>Peserta:</b> ' + esc(d.participants || '-') + '</div>' +
+            '<div><b>No. Invoice:</b> ' + esc(d.invoice_number) + '</div>';
+        $('pmLabTop').onclick = function () { $('pmLab').classList.toggle('open'); };
+        $('pmReceipt').onclick = function () { $('pmLab').classList.toggle('open'); };
+
+        // Cara pembayaran
+        var tabs = howTabs(d, totalText);
+        function drawTab(i) {
+            $('pmTabs').innerHTML = tabs.length > 1 ? tabs.map(function (t, k) {
+                return '<button type="button" class="pm-tab' + (k === i ? ' on' : '') + '" data-k="' + k + '">' + esc(t.name) + '</button>';
+            }).join('') : '';
+            $('pmSteps').innerHTML = tabs[i].steps.map(function (st, k) {
+                return '<div class="pm-step"><span class="n">' + (k + 1) + '</span><div>' + st + '</div></div>';
+            }).join('');
+        }
+        $('pmTabs').onclick = function (e) { var b = e.target.closest('.pm-tab'); if (b) drawTab(parseInt(b.getAttribute('data-k'), 10)); };
+        drawTab(0);
+
+        setMsg('', '');
+        if (d.simulation) setMsg('sim', 'Mode simulasi aktif (APP_DEBUG): menekan tombol Cek Status di atas akan menandai pembayaran sebagai lunas.');
+
+        // Hitung mundur
+        var end = new Date(d.expired_at).getTime();
+        var tick = function () {
+            var left = end - Date.now();
+            if (left <= 0) { showExpired(); return; }
+            var h = Math.floor(left / 3600000), m = Math.floor(left % 3600000 / 60000), sc = Math.floor(left % 60000 / 1000);
+            var z = function (n) { return (n < 10 ? '0' : '') + n; };
+            $('pmCd').textContent = z(h) + ':' + z(m) + ':' + z(sc);
+        };
+        if (cdTimer) clearInterval(cdTimer);
+        tick(); cdTimer = setInterval(tick, 1000);
+
+        // Cek status pembayaran
+        $('pmCheck').onclick = function () {
+            var btn = $('pmCheck');
+            btn.disabled = true; $('pmCheckText').textContent = 'Memeriksa...';
+            fetch(P.urls.bookings + '/' + encodeURIComponent(d.booking_code) + '/check-payment', {
+                method: 'POST',
+                headers: { 'X-CSRF-TOKEN': P.csrf, 'Accept': 'application/json', 'X-Requested-With': 'XMLHttpRequest' },
+                credentials: 'same-origin'
+            }).then(function (res) {
+                return res.json().catch(function () { return {}; }).then(function (j) { return { ok: res.ok, status: res.status, json: j }; });
+            }).then(function (r) {
+                btn.disabled = false; $('pmCheckText').textContent = 'Cek Status Pembayaran';
+                if (r.json && r.json.status === 'paid') { showPaid(d); return; }
+                if (r.json && r.json.status === 'expired') { showExpired(); return; }
+                if (r.json && r.json.status === 'unpaid') { setMsg('info', 'Pembayaran belum kami terima. Selesaikan pembayaran lalu cek kembali dalam beberapa saat.'); return; }
+                var msg = (r.json && r.json.message) || 'Gagal memeriksa status pembayaran.';
+                if (r.status === 419) msg = 'Sesi halaman kedaluwarsa. Muat ulang halaman lalu coba lagi.';
+                setMsg('err', msg);
+            }).catch(function () {
+                btn.disabled = false; $('pmCheckText').textContent = 'Cek Status Pembayaran';
+                setMsg('err', 'Tidak dapat terhubung ke server. Coba lagi.');
+            });
+        };
+    }
+
     /* ---------- Data dari Tahap 1 & 2 ---------- */
     var D = null;
     try { D = JSON.parse(sessionStorage.getItem('palapa_booking') || 'null'); } catch (e) {}
-    if (!D || D.lab_id !== P.lab.id || !D.reservation_date) {
+    var hasDraft = !!(D && D.lab_id === P.lab.id && D.reservation_date);
+
+    var PAY = null;
+    try { PAY = JSON.parse(sessionStorage.getItem('palapa_payment') || 'null'); } catch (e) {}
+    if (PAY && PAY.lab_id !== P.lab.id) PAY = null;
+
+    if (hasDraft) {
+        // Ada pesanan baru yang sedang dibuat: buang tagihan lama dari penyimpanan browser
+        try { sessionStorage.removeItem('palapa_payment'); } catch (e) {}
+        PAY = null;
+    } else if (PAY) {
+        // Halaman dimuat ulang setelah reservasi dibuat: tampilkan kembali instruksi pembayaran
+        showPayment(PAY);
+        return;
+    }
+
+    if (!hasDraft) {
         if (P.urls.step1) window.location.replace(P.urls.step1);
         return;
     }
+
     if (!D.pricing) {
         if (P.urls.step2) window.location.replace(P.urls.step2);
         return;
@@ -483,8 +818,6 @@
 
     $('lnkEdit').href = P.urls.step1 || '#';
     $('lnkBack').href = P.urls.step2 || '#';
-    $('mRiwayat').href = P.urls.riwayat;
-    $('mHome').href = P.urls.home;
 
     var SHIFT_INFO = {
         'Pagi':  { title: 'Sesi 1: Pagi',  short: 'Sesi 1', clock: '08.00 - 12.00', hours: 4, rent: 'Sesi Pagi' },
@@ -681,14 +1014,19 @@
                     return;
                 }
                 var d = r.json.data;
-                $('mCode').textContent = d.booking_code;
-                $('mInv').textContent = d.invoice_number;
-                $('mVendor').textContent = d.vendor_name;
-                $('mTotal').textContent = rupiah(d.grand_total);
-                $('mExp').textContent = d.expired_at;
-                $('overlay').classList.add('show');
-                try { sessionStorage.removeItem('palapa_booking'); } catch (e) {}
+                d.lab_id = P.lab.id;
+                d.lab_name = P.lab.name;
+                d.institution = D.institution_name;
+                d.date_label = DAYS[dt.getDay()] + ', ' + dateLabel;
+                d.shift_label = SH.title + ' (' + SH.clock + ' WIB)';
+                d.participants = N + ' ' + UNIT;
+                try {
+                    sessionStorage.setItem('palapa_payment', JSON.stringify(d));
+                    sessionStorage.removeItem('palapa_booking');
+                } catch (e) {}
                 idbClear();
+                submitting = false; $('btnPayText').textContent = 'Bayar dan Terbitkan Kode Reservasi';
+                showPayment(d);
             }).catch(function () {
                 showError('Tidak dapat terhubung ke server. Periksa koneksi Anda lalu coba lagi.');
                 submitting = false; $('btnPayText').textContent = 'Bayar dan Terbitkan Kode Reservasi'; updateBtn();

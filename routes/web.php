@@ -82,6 +82,8 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/bookings/step2/{lab_id}', [App\Http\Controllers\Web\BookingController::class, 'step2'])->name('bookings.step2');
 
     Route::get('/bookings/step3/{lab_id}', [App\Http\Controllers\Web\BookingController::class, 'step3'])->name('bookings.step3');
-    
+
     Route::post('/bookings', [App\Http\Controllers\Web\BookingController::class, 'store'])->name('bookings.store');
+
+    Route::post('/bookings/{booking_code}/check-payment', [App\Http\Controllers\Web\BookingController::class, 'checkPayment'])->name('bookings.check-payment');
 });

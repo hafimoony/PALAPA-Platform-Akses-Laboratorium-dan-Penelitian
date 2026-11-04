@@ -9,6 +9,7 @@ use App\Models\BookingEquipmentItem;
 use App\Models\Invoice;
 use App\Models\LabEquipment;
 use App\Models\Laboratory;
+use App\Models\Payment;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
@@ -66,7 +67,7 @@ class BookingController extends Controller
         return view('client.booking.step3', compact('lab', 'vendors'));
     }
 
-    // POST /bookings  -> simpan reservasi + invoice (status awal: pending_review)
+    // POST /bookings  -> simpan reservasi + invoice + tagihan pembayaran (slot langsung dikunci: locked_unpaid)
     public function store(Request $request)
     {
         $data = json_decode((string) $request->input('payload'), true);
@@ -162,7 +163,7 @@ class BookingController extends Controller
             $result = DB::transaction(function () use (
                 $request, $data, $lab, $user, $session, $equipmentRows,
                 $rentFee, $equipmentFee, $consumableFee, $technicianFee,
-                $discount, $deposit, $vendorFee, $grandTotal
+                $discount, $deposit, $vendorFee, $grandTotal, $vendor
             ) {
                 // Cek bentrok jadwal (aturan sama dengan kalender Tahap 1)
                 $booked = Booking::where('lab_id', $lab->lab_id)
@@ -205,7 +206,7 @@ class BookingController extends Controller
                     'total_participants'        => (int) $data['total_participants'],
                     'proposal_file_url'         => $proposalUrl,
                     'need_technician_assistant' => $technicianFee > 0,
-                    'status'                    => 'pending_review',
+                    'status'                    => 'locked_unpaid',
                 ]);
 
                 foreach ($equipmentRows as $row) {
@@ -221,8 +222,9 @@ class BookingController extends Controller
 
                 // Diskon dipotongkan dari biaya sewa ruangan; reagen & limbah masuk ke biaya alat/bahan
                 $expiredAt = now()->addHours(24);
+                $invoiceId = 'INV-' . Str::upper(Str::random(10));
                 Invoice::create([
-                    'invoice_id'           => 'INV-' . Str::upper(Str::random(10)),
+                    'invoice_id'           => $invoiceId,
                     'invoice_number'       => $invoiceNumber,
                     'booking_id'           => $transactionId,
                     'lab_rental_fee'       => $rentFee - $discount,
@@ -236,11 +238,23 @@ class BookingController extends Controller
                     'expired_at'           => $expiredAt,
                 ]);
 
+                // Tagihan pembayaran: nomor VA / kode bayar disimpan di payments (paid_at masih kosong)
+                $pay = $this->makePayCode($vendor, $bookingCode);
+                Payment::create([
+                    'payment_id'             => 'PAY-' . Str::upper(Str::random(10)),
+                    'invoice_id'             => $invoiceId,
+                    'vendor_id'              => $vendor->vendor_id,
+                    'gateway_transaction_id' => $pay['code'],
+                    'paid_amount'            => $grandTotal,
+                    'paid_at'                => null,
+                ]);
+
                 return [
                     'clash'          => false,
                     'booking_code'   => $bookingCode,
                     'invoice_number' => $invoiceNumber,
-                    'expired_at'     => $expiredAt->toDateTimeString(),
+                    'expired_at'     => $expiredAt->toIso8601String(),
+                    'pay'            => $pay,
                 ];
             });
         } catch (\Throwable $e) {
@@ -252,16 +266,106 @@ class BookingController extends Controller
             return response()->json(['status' => 'error', 'message' => 'Jadwal tersebut baru saja dipesan pengguna lain. Silakan pilih tanggal atau sesi lain.'], 422);
         }
 
+        // QR untuk kanal QRIS (opsional, hanya jika paket simple-qrcode terpasang)
+        $qrSvg = null;
+        if ($result['pay']['kind'] === 'qris' && class_exists(\SimpleSoftwareIO\QrCode\Facades\QrCode::class)) {
+            try {
+                $qrSvg = (string) \SimpleSoftwareIO\QrCode\Facades\QrCode::format('svg')->size(200)->margin(1)->generate($result['pay']['code']);
+            } catch (\Throwable $e) {
+                $qrSvg = null;
+            }
+        }
+
         return response()->json([
             'status'  => 'success',
-            'message' => 'Pengajuan reservasi berhasil dibuat.',
+            'message' => 'Reservasi berhasil dibuat. Silakan selesaikan pembayaran.',
             'data'    => [
                 'booking_code'   => $result['booking_code'],
                 'invoice_number' => $result['invoice_number'],
                 'grand_total'    => $grandTotal,
                 'expired_at'     => $result['expired_at'],
-                'vendor_name'    => $vendor->vendor_name,
+                'vendor'         => [
+                    'code'     => strtoupper($vendor->vendor_code),
+                    'name'     => $vendor->vendor_name,
+                    'type'     => $vendor->vendor_type,
+                    'merchant' => preg_replace('/\D/', '', (string) $vendor->account_number_or_merchant_id),
+                ],
+                'pay'            => [
+                    'kind'   => $result['pay']['kind'],
+                    'label'  => $result['pay']['label'],
+                    'code'   => $result['pay']['code'],
+                    'qr_svg' => $qrSvg,
+                ],
+                'simulation'     => (bool) config('app.debug'),
             ],
         ], 201);
+    }
+
+    // POST /bookings/{booking_code}/check-payment  -> cek status pembayaran
+    public function checkPayment(Request $request, $booking_code)
+    {
+        $booking = Booking::with('invoice')->where('booking_code', $booking_code)->first();
+        if (!$booking || !$booking->invoice) {
+            return response()->json(['status' => 'error', 'message' => 'Reservasi tidak ditemukan.'], 404);
+        }
+
+        $ownerId = BaseTransaction::where('transaction_id', $booking->booking_id)->value('user_id');
+        if ($ownerId !== $request->user()->user_id) {
+            return response()->json(['status' => 'error', 'message' => 'Anda tidak berhak mengakses reservasi ini.'], 403);
+        }
+
+        $invoice = $booking->invoice;
+
+        if ($invoice->payment_status === 'paid_successful') {
+            return response()->json(['status' => 'paid', 'booking_status' => $booking->status]);
+        }
+
+        if ($invoice->payment_status === 'expired' || $booking->status === 'cancelled') {
+            return response()->json(['status' => 'expired']);
+        }
+
+        // Lewat batas waktu: invoice kedaluwarsa dan slot dibebaskan kembali
+        if (now()->greaterThan(\Carbon\Carbon::parse($invoice->expired_at))) {
+            DB::transaction(function () use ($invoice, $booking) {
+                $invoice->update(['payment_status' => 'expired']);
+                $booking->update(['status' => 'cancelled']);
+            });
+            return response()->json(['status' => 'expired']);
+        }
+
+        // MODE SIMULASI (hanya saat APP_DEBUG=true): menekan "Cek Status" dianggap pembayaran sudah masuk.
+        // Untuk produksi, ganti bagian ini dengan verifikasi ke payment gateway (Midtrans/Xendit/Simponi).
+        if (config('app.debug')) {
+            DB::transaction(function () use ($invoice, $booking) {
+                Payment::where('invoice_id', $invoice->invoice_id)->whereNull('paid_at')->update(['paid_at' => now()]);
+                $invoice->update(['payment_status' => 'paid_successful']);
+                $booking->update(['status' => 'paid_confirmed']);
+            });
+            return response()->json(['status' => 'paid', 'booking_status' => 'paid_confirmed', 'simulated' => true]);
+        }
+
+        return response()->json(['status' => 'unpaid']);
+    }
+
+    // Membuat nomor VA / kode billing / kode QRIS sesuai jenis kanal
+    private function makePayCode($vendor, string $bookingCode): array
+    {
+        $code     = strtoupper((string) $vendor->vendor_code);
+        $type     = $vendor->vendor_type;
+        $merchant = preg_replace('/\D/', '', (string) $vendor->account_number_or_merchant_id);
+
+        if (in_array($type, ['qris_instant', 'ewallet'], true)) {
+            return ['kind' => 'qris', 'label' => 'Kode Pembayaran QRIS', 'code' => 'PALAPA-' . $bookingCode];
+        }
+
+        $prefix = substr(str_pad($merchant, 4, '0'), 0, 4);
+        do {
+            $va = $prefix . date('Ymd') . str_pad((string) random_int(0, 9999), 4, '0', STR_PAD_LEFT);
+        } while (Payment::where('gateway_transaction_id', $va)->exists());
+
+        if (str_contains($code, 'SIMPONI')) {
+            return ['kind' => 'simponi', 'label' => 'Kode Billing SIMPONI', 'code' => $va];
+        }
+        return ['kind' => 'va', 'label' => 'Nomor Virtual Account', 'code' => $va];
     }
 }
