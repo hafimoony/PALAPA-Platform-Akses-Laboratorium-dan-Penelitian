@@ -1,3 +1,4 @@
+
 <?php
 
 namespace App\Models;
@@ -5,6 +6,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable
@@ -13,16 +15,17 @@ class User extends Authenticatable
 
     protected $table = 'users';
 
-    // Set Custom Primary Key
     protected $primaryKey = 'user_id';
+
     public $incrementing = false;
+
     protected $keyType = 'string';
 
     protected $fillable = [
         'user_id',
         'name',
         'email',
-        'password_hash', // Sesuai kolom di skema SQL
+        'password_hash',
         'phone_number',
         'role',
     ];
@@ -31,23 +34,26 @@ class User extends Authenticatable
         'password_hash',
     ];
 
-    /**
-     * Memberitahu Laravel bahwa kolom password bernama 'password_hash'
-     */
-    public function getAuthPassword()
-    {
-        return $this->password_hash;
-    }
-
     protected function casts(): array
     {
         return [
+            'password_hash' => 'hashed',
             'created_at' => 'datetime',
             'updated_at' => 'datetime',
         ];
     }
-    public function externalProfile()
-{
-    return $this->hasOne(ExternalProfile::class, 'user_id', 'user_id');
-}
+
+    public function getAuthPassword(): string
+    {
+        return $this->password_hash;
+    }
+
+    public function externalProfile(): HasOne
+    {
+        return $this->hasOne(
+            ExternalProfile::class,
+            'user_id',
+            'user_id'
+        );
+    }
 }

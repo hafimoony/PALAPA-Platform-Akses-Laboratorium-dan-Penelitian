@@ -2,14 +2,15 @@
 
 namespace Database\Seeders;
 
+
 use Illuminate\Database\Seeder;
 use App\Models\Laboratory;
+use App\Models\Campus;
 
 class LaboratorySeeder extends Seeder
 {
     public function run(): void
     {
-        Laboratory::query()->delete();
 
         $labs = [
             // --- JABODETABEK & BANTEN ---
@@ -704,7 +705,30 @@ class LaboratorySeeder extends Seeder
         ];
 
         foreach ($labs as $lab) {
-            Laboratory::create($lab);
-        }
+
+    // Normalisasi dua nama lokasi BRIN Cibinong
+    if (
+        $lab['campus_name'] === 'KST Soekarno Cibinong'
+    ) {
+        $campusName = 'Kawasan Sains dan Teknologi Soekarno';
+    } else {
+        $campusName = $lab['campus_name'];
+    }
+
+    // Cari ID kampus berdasarkan nama lokasi
+    $campus = Campus::where('campus_name', $campusName)
+        ->firstOrFail();
+
+    // Ganti campus_name menjadi campus_id
+    $lab['campus_id'] = $campus->campus_id;
+
+    unset($lab['campus_name']);
+
+    // Simpan tanpa menghapus data sebelumnya
+    Laboratory::updateOrCreate(
+        ['lab_id' => $lab['lab_id']],
+        $lab
+    );
+}
     }
 }

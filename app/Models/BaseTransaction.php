@@ -1,32 +1,51 @@
+
 <?php
 
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class BaseTransaction extends Model
 {
     protected $table = 'base_transactions';
+
     protected $primaryKey = 'transaction_id';
+
     public $incrementing = false;
+
     protected $keyType = 'string';
-    public $timestamps = false;
 
     protected $fillable = [
         'transaction_id',
         'transaction_number',
         'user_id',
         'total_amount',
-        'created_at',
     ];
 
-    public function booking()
+    protected function casts(): array
     {
-        return $this->hasOne(Booking::class, 'booking_id', 'transaction_id');
+        return [
+            'total_amount' => 'decimal:2',
+        ];
     }
 
-    public function user()
+    public function booking(): HasOne
     {
-        return $this->belongsTo(User::class, 'user_id', 'user_id');
+        return $this->hasOne(
+            Booking::class,
+            'booking_id',
+            'transaction_id'
+        );
+    }
+
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(
+            User::class,
+            'user_id',
+            'user_id'
+        );
     }
 }
