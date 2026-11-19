@@ -444,34 +444,7 @@
     <div class="container">
 
         <!-- NAVBAR -->
-        <div class="navbar-wrapper">
-            <nav class="navbar">
-                <a href="{{ url('/') }}" class="nav-brand">
-                    <img src="{{ asset('images/logo-palapa.jpg') }}" alt="PALAPA Logo">
-                </a>
-
-                <div class="nav-links">
-                    <a href="{{ url('/') }}" class="nav-link">Beranda</a>
-                    <!-- Katalog Lab sekarang menjadi class "active" (ditandai dengan warna biru) -->
-                    <a href="{{ route('labs.index') }}" class="nav-link active">Katalog Lab</a>
-                    <a href="{{ route('labs.index') }}" class="nav-link">Instrumen Riset</a>
-                    <!-- Tautan ke Pusat Bantuan -->
-                    <a href="{{ url('/pusat-bantuan') }}" class="nav-link">Pusat Bantuan</a>
-                </div>
-
-                <div class="nav-search">
-                    <form action="{{ route('labs.index') }}" method="GET" style="margin: 0;">
-                        <input type="text" name="search" placeholder="Pencarian" autocomplete="off">
-                        <i class="fa-solid fa-magnifying-glass"></i>
-                    </form>
-                </div>
-
-                <div class="nav-actions">
-                    <a href="{{ url('/riwayat') }}" class="icon-btn" title="Riwayat"><i class="fa-solid fa-cart-shopping"></i></a>
-                    <a href="{{ url('/login') }}" class="icon-btn" title="Masuk Akun"><i class="fa-solid fa-user"></i></a>
-                </div>
-            </nav>
-        </div>
+        @include('partials.navbar')
 
         <!-- HEADER KATALOG -->
         <div class="catalog-header">

@@ -702,35 +702,7 @@
     <div class="container">
 
         <!-- NAVBAR -->
-        <div class="navbar-wrapper">
-            <nav class="navbar">
-                <!-- LOGO PALAPA (Memanggil dari public/images/logo-palapa.jpg) -->
-                <a href="{{ url('/') }}" class="nav-brand">
-                    <img src="{{ asset('images/logo-palapa.jpg') }}" alt="PALAPA Logo">
-                </a>
-
-                <div class="nav-links">
-                    <a href="{{ url('/') }}" class="nav-link active">Beranda</a>
-                    <!-- Tautan yang sudah ada tidak saya ubah -->
-                    <a href="{{ route('labs.index') }}" class="nav-link">Katalog Lab</a>
-                    
-                    <!-- Menambahkan rute ke placeholder #instrumen dan #bantuan -->
-                    <a href="{{ route('labs.index') }}" class="nav-link">Instrumen Riset</a>
-                    <a href="{{ url('/pusat-bantuan') }}" class="nav-link">Pusat Bantuan</a>
-                </div>
-
-                <div class="nav-search">
-                    <input type="text" placeholder="Pencarian">
-                    <i class="fa-solid fa-magnifying-glass"></i>
-                </div>
-
-                <div class="nav-actions">
-                    <!-- Menambahkan rute Riwayat dan Login ke icon action navbar -->
-                    <a href="{{ url('/riwayat') }}" class="icon-btn" title="Riwayat"><i class="fa-solid fa-cart-shopping"></i></a>
-                    <a href="{{ url('/login') }}" class="icon-btn" title="Masuk Akun"><i class="fa-solid fa-globe"></i></a>
-                </div>
-            </nav>
-        </div>
+        @include('partials.navbar')
 
         <!-- HERO SECTION -->
         <section class="hero">

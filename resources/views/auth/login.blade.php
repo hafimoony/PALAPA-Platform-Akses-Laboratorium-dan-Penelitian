@@ -313,40 +313,35 @@
         }
 
         .form-extra-options {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 20px;
-    position: relative;
-    z-index: 5;
-}
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            position: relative;
+            z-index: 5;
+        }
 
-.forgot-link {
-    color: #334EAC;
-    font-size: 12px;
-    font-weight: 600;
-    text-decoration: none;
-    position: relative;
-    z-index: 10;
-    pointer-events: auto !important;
-    cursor: pointer !important;
-}
+        .forgot-link {
+            color: #334EAC;
+            font-size: 12px;
+            font-weight: 700;
+            text-decoration: none;
+            position: relative;
+            z-index: 10;
+            pointer-events: auto !important;
+            cursor: pointer !important;
+        }
 
-.forgot-link:hover {
-    text-decoration: underline;
-    color: #172A68;
-}
+        .forgot-link:hover {
+            text-decoration: underline;
+            color: #172A68;
+        }
         .checkbox-label {
             display: flex;
             align-items: center;
             gap: 6px;
             color: #475569;
             cursor: pointer;
-        }
-        .forgot-link {
-            color: #334EAC;
-            font-weight: 700;
-            text-decoration: none;
         }
 
         .btn-login-submit {
@@ -663,6 +658,19 @@
                 <h2 class="form-welcome-title">Selamat Datang Kembali</h2>
                 <p class="form-welcome-sub">Masukkan kredensial akun instansi Anda untuk mengakses reservasi instrumen & status pengujian sampel laboratorium.</p>
 
+                <!-- NOTIFIKASI PESAN SUKSES / ERROR -->
+                @if (session('success'))
+                    <div style="background:#DCFCE7; border:1px solid #86EFAC; color:#166534; padding:10px 14px; border-radius:8px; font-size:12px; margin-bottom:16px;">
+                        {{ session('success') }}
+                    </div>
+                @endif
+
+                @if ($errors->any())
+                    <div style="background:#FEE2E2; border:1px solid #FCA5A5; color:#991B1B; padding:10px 14px; border-radius:8px; font-size:12px; margin-bottom:16px;">
+                        {{ $errors->first() }}
+                    </div>
+                @endif
+
                 <!-- LOGIN FORM -->
                 <form action="{{ route('login') }}" method="POST">
                     @csrf
@@ -674,7 +682,7 @@
                         </div>
                         <div class="input-icon-wrapper">
                             <i class="fa-regular fa-envelope left-icon"></i>
-                            <input type="email" name="email" class="form-input-field" placeholder="contoh: nico.hermansyah@sman1pasuruan.sch.id" required autofocus>
+                            <input type="email" name="email" value="{{ old('email') }}" class="form-input-field" placeholder="contoh: client@instansi.or.id" required autofocus>
                         </div>
                     </div>
 
@@ -691,13 +699,13 @@
                     </div>
 
                     <div class="form-extra-options" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; position: relative; z-index: 10;">
-    <label class="checkbox-label" style="cursor: pointer; font-size: 12px;">
-        <input type="checkbox" name="remember"> Ingat saya di perangkat ini
-    </label>
-    <a href="{{ route('password.request') }}" class="forgot-link" style="position: relative; z-index: 20; pointer-events: auto; cursor: pointer;">
-        Lupa Kata Sandi?
-    </a>
-</div>
+                        <label class="checkbox-label" style="cursor: pointer; font-size: 12px;">
+                            <input type="checkbox" name="remember"> Ingat saya di perangkat ini
+                        </label>
+                        <a href="{{ route('password.request') }}" class="forgot-link" style="position: relative; z-index: 20; pointer-events: auto; cursor: pointer;">
+                            Lupa Kata Sandi?
+                        </a>
+                    </div>
 
                     <button type="submit" class="btn-login-submit">
                         Masuk ke Akun PALAPA <i class="fa-solid fa-arrow-right"></i>
@@ -711,13 +719,13 @@
                 </div>
 
                 <div class="sso-buttons-row">
-    <a href="{{ route('google.login') }}" class="btn-sso-item">
-        <i class="fa-brands fa-google text-danger"></i> Akun Belajar.id / Google
-    </a>
-    <a href="#" class="btn-sso-item">
-        <i class="fa-solid fa-graduation-cap text-primary"></i> SSO Kedaireka / Dikti
-    </a>
-</div>
+                    <a href="{{ route('google.login') }}" class="btn-sso-item">
+                        <i class="fa-brands fa-google text-danger"></i> Akun Belajar.id / Google
+                    </a>
+                    <a href="#" class="btn-sso-item">
+                        <i class="fa-solid fa-graduation-cap text-primary"></i> SSO Kedaireka / Dikti
+                    </a>
+                </div>
 
                 <div class="register-footer-text">
                     Belum memiliki akun instansi atau lembaga riset?

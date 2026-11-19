@@ -44,4 +44,9 @@ class Laboratory extends Model
     {
         return $this->hasMany(LabEquipment::class, 'lab_id', 'lab_id');
     }
+
+    public function bookings(): HasMany
+    {
+        return $this->hasMany(Booking::class, 'lab_id', 'lab_id');
+    }
 }

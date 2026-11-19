@@ -221,15 +221,15 @@
         }
         .contact-icon.wa { background: #10b981; }
         .contact-icon.livechat { background: #3B82F6; }
-        
+
         .contact-title { font-size: 16px; font-weight: 700; margin-bottom: 2px;}
         .contact-title.wa { color: #065f46; }
         .contact-title.livechat { color: #1e3a8a; }
-        
+
         .contact-desc { font-size: 12px; }
         .contact-desc.wa { color: #047857; }
         .contact-desc.livechat { color: #1d4ed8; }
-        
+
         .btn-action {
             color: #ffffff;
             padding: 12px 24px;
@@ -370,37 +370,7 @@
     <div class="container">
 
         <!-- NAVBAR -->
-        <div class="navbar-wrapper">
-            <nav class="navbar">
-                <a href="{{ url('/') }}" class="nav-brand">
-                    <img src="{{ asset('images/logo-palapa.jpg') }}" alt="PALAPA Logo">
-                </a>
-
-                <div class="nav-links">
-                    <a href="{{ url('/') }}" class="nav-link">Beranda</a>
-                    <a href="{{ route('labs.index') }}" class="nav-link">Katalog Lab</a>
-                    <a href="{{ route('labs.index') }}" class="nav-link">Instrumen Riset</a>
-                    <a href="{{ url('/pusat-bantuan') }}" class="nav-link active">Pusat Bantuan</a>
-                </div>
-
-                <div class="nav-search">
-                    <input type="text" placeholder="Pencarian">
-                    <i class="fa-solid fa-magnifying-glass"></i>
-                </div>
-
-                <div class="nav-actions">
-                    <a href="{{ url('/riwayat') }}" class="icon-btn" title="Riwayat"><i class="fa-solid fa-cart-shopping"></i></a>
-                    <a href="{{ url('/login') }}" class="icon-btn" title="Masuk Akun"><i class="fa-solid fa-user"></i></a>
-                </div>
-            </nav>
-        </div>
-
-        <!-- TOMBOL KEMBALI (BACK TO HOME) -->
-        <div class="btn-back-wrapper">
-            <a href="{{ url('/') }}" class="btn-back">
-                <i class="fa-solid fa-arrow-left"></i> Kembali ke Beranda
-            </a>
-        </div>
+        @include('partials.navbar')
 
         <!-- HERO PUSAT BANTUAN -->
         <section class="help-hero">

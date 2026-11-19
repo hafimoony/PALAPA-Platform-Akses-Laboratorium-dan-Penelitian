@@ -3,6 +3,8 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class LabEquipment extends Model
 {
@@ -16,7 +18,13 @@ class LabEquipment extends Model
         'serial_number', 'quantity_total', 'rental_price_per_unit', 'status'
     ];
 
-    public function laboratory() {
+    public function laboratory(): BelongsTo
+    {
         return $this->belongsTo(Laboratory::class, 'lab_id', 'lab_id');
+    }
+
+    public function bookingItems(): HasMany
+    {
+        return $this->hasMany(BookingEquipmentItem::class, 'equipment_id', 'equipment_id');
     }
 }

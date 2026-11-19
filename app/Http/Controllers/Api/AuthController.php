@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\ExternalProfile;
 use App\Models\User;
+use App\Models\UserRole;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -50,6 +51,12 @@ class AuthController extends Controller
                 'role' => $role,
             ]);
 
+            // Simpan ke tabel user_roles (1 = staff/admin, 2 = client)
+            UserRole::create([
+                'user_id' => $user->user_id,
+                'role_id' => in_array($role, ['staff', 'admin'], true) ? 1 : 2,
+            ]);
+
             if ($role === 'client' && !empty($validated['institution_name'])) {
                 $profileId = 'PRF-' . strtoupper(Str::random(10));
 
@@ -72,7 +79,6 @@ class AuthController extends Controller
         });
 
         if (!$request->expectsJson()) {
-            // Redirect langsung ke halaman login dengan pesan sukses
             return redirect()->route('login')->with('success', 'Registrasi akun berhasil! Silakan masuk dengan email dan kata sandi Anda.');
         }
 
@@ -94,7 +100,6 @@ class AuthController extends Controller
 
         $user = User::where('email', $request->email)->first();
 
-        // Cek pengguna & kecocokan password_hash
         if (!$user || !Hash::check($request->password, $user->password_hash)) {
             if ($request->expectsJson()) {
                 return response()->json([
@@ -106,18 +111,25 @@ class AuthController extends Controller
             ]);
         }
 
-        // Login session untuk Web Browser
         Auth::login($user);
 
-        // Buat token Sanctum untuk API
+        // Simpan user_role ke session untuk Middleware RBAC
+        if (!$request->expectsJson()) {
+            $request->session()->regenerate();
+        }
+        $ur = UserRole::where('user_id', $user->user_id)->first();
+        $roleId = $ur ? (int) $ur->role_id : (in_array($user->role, ['staff', 'admin'], true) ? 1 : 2);
+        session(['user_role' => $roleId]);
+
         $token = $user->createToken('auth_token')->plainTextToken;
 
-        // Jika request dari Form HTML Web biasa
         if (!$request->expectsJson()) {
+            if ($roleId === 1) {
+                return redirect()->intended('/staff/dashboard')->with('success', 'Selamat datang, Staf Laboratorium!');
+            }
             return redirect()->intended('/')->with('success', 'Berhasil login!');
         }
 
-        // Jika request dari API / JSON
         return response()->json([
             'message' => 'Login successful',
             'data' => $user->load('externalProfile'),
@@ -138,14 +150,12 @@ class AuthController extends Controller
     // 4. LOGOUT
     public function logout(Request $request)
     {
-        // Logout Session Web jika ada
         if (Auth::check()) {
             Auth::logout();
             $request->session()->invalidate();
             $request->session()->regenerateToken();
         }
 
-        // Revoke token API jika dipanggil via Sanctum
         if ($request->user() && $request->user()->currentAccessToken()) {
             $request->user()->currentAccessToken()->delete();
         }
@@ -159,34 +169,38 @@ class AuthController extends Controller
         ]);
     }
 
-    // PAKE GOOGLE
-    // 1. Redirect ke Halaman Login Google
-public function redirectToGoogle()
-{
-    return Socialite::driver('google')->redirect();
-}
-
-// 2. Handle Callback dari Google
-public function handleGoogleCallback()
-{
-    try {
-        $googleUser = Socialite::driver('google')->user();
-
-        // Cari user berdasarkan email atau buat user baru
-        $user = User::firstOrCreate(
-            ['email' => $googleUser->getEmail()],
-            [
-                'name' => $googleUser->getName(),
-                'password' => bcrypt(Str::random(16)), // Password acak
-                'role' => 'client', // Default role penyewa
-            ]
-        );
-
-        Auth::login($user);
-
-        return redirect()->route('home')->with('success', 'Berhasil masuk dengan akun Google!');
-    } catch (\Exception $e) {
-        return redirect()->route('login')->withErrors(['msg' => 'Gagal masuk menggunakan Google. Silakan coba lagi.']);
+    // 5. LOGIN GOOGLE
+    public function redirectToGoogle()
+    {
+        return Socialite::driver('google')->redirect();
     }
-}
+
+    public function handleGoogleCallback()
+    {
+        try {
+            $googleUser = Socialite::driver('google')->user();
+
+            $user = User::firstOrCreate(
+                ['email' => $googleUser->getEmail()],
+                [
+                    'user_id' => 'USR-' . strtoupper(Str::random(10)),
+                    'name' => $googleUser->getName(),
+                    'password_hash' => Hash::make(Str::random(16)),
+                    'role' => 'client',
+                ]
+            );
+
+            UserRole::firstOrCreate(
+                ['user_id' => $user->user_id],
+                ['role_id' => 2]
+            );
+
+            Auth::login($user);
+            session(['user_role' => 2]);
+
+            return redirect()->route('home')->with('success', 'Berhasil masuk dengan akun Google!');
+        } catch (\Exception $e) {
+            return redirect()->route('login')->withErrors(['msg' => 'Gagal masuk menggunakan Google. Silakan coba lagi.']);
+        }
+    }
 }

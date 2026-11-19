@@ -1,4 +1,3 @@
-
 <?php
 
 namespace App\Models;
@@ -55,5 +54,10 @@ class User extends Authenticatable
             'user_id',
             'user_id'
         );
+    }
+
+    public function userRole(): HasOne
+    {
+        return $this->hasOne(UserRole::class, 'user_id', 'user_id');
     }
 }
