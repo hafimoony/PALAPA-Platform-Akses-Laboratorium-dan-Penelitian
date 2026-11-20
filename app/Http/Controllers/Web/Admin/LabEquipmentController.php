@@ -15,7 +15,8 @@ class LabEquipmentController extends Controller
         $query = LabEquipment::with('laboratory');
         if ($request->filled('search')) {
             $s = $request->search;
-            $query->where(fn($q) => $q->where('equipment_name', 'like', "%$s%")
+            $query->where(fn($q) => $q->where('equipment_id', 'like', "%$s%")
+                                       ->orWhere('equipment_name', 'like', "%$s%")
                                        ->orWhere('brand_model', 'like', "%$s%")
                                        ->orWhere('serial_number', 'like', "%$s%"));
         }

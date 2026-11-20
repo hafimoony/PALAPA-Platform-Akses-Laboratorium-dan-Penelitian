@@ -83,7 +83,7 @@ Route::middleware(['auth'])->group(function () {
     // Area Khusus Client / Penyewa (Role 2)
     Route::middleware(['role:2'])->group(function () {
         Route::get('/riwayat', function (\Illuminate\Http\Request $request) {
-            $bookings = \App\Models\Booking::with(['laboratory.campus', 'equipmentItems.equipment', 'invoice', 'entryPass'])
+            $bookings = \App\Models\Booking::with(['laboratory.campus', 'equipmentItems.equipment', 'invoice', 'entryPass', 'depositRefund'])
                 ->whereHas('baseTransaction', function ($q) use ($request) {
                     $q->where('user_id', $request->user()->user_id);
                 })
@@ -92,6 +92,26 @@ Route::middleware(['auth'])->group(function () {
 
             return view('client.riwayat', compact('bookings'));
         })->name('riwayat');
+
+        Route::post('/bookings/{booking_code}/reschedule', function (\Illuminate\Http\Request $request, string $booking_code) {
+            $request->validate([
+                'reservation_date' => 'required|date|after_or_equal:today',
+                'session_time'     => 'required|string|max:100',
+            ]);
+
+            $booking = \App\Models\Booking::where('booking_code', $booking_code)
+                ->whereHas('baseTransaction', fn($q) => $q->where('user_id', $request->user()->user_id))
+                ->firstOrFail();
+
+            $booking->update([
+                'reservation_date' => $request->reservation_date,
+                'session_time'     => $request->session_time,
+                'status'           => 'paid_confirmed',
+                'rejection_reason' => null,
+            ]);
+
+            return back()->with('success', "Jadwal reservasi {$booking_code} berhasil diajukan ulang (Reschedule) dan menunggu verifikasi Staff.");
+        })->name('client.bookings.reschedule');
 
         Route::get('/profil', function () {
             return view('client.profile');

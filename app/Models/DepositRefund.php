@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class DepositRefund extends Model
 {
@@ -10,11 +11,32 @@ class DepositRefund extends Model
     protected $primaryKey = 'refund_id';
     public $incrementing = false;
     protected $keyType = 'string';
-    public $timestamps = false;
+    public $timestamps = true;
 
     protected $fillable = [
-        'refund_id', 'invoice_id', 'ticket_id', 'original_deposit_amount',
-        'deduction_amount', 'final_refund_amount', 'refund_vendor_id',
-        'refund_account_number', 'refund_status', 'processed_at'
+        'refund_id',
+        'booking_id',
+        'processed_by_staff_id',
+        'original_deposit',
+        'deduction_amount',
+        'refunded_amount',
+        'refund_status',
+        'notes',
+        'refunded_at',
     ];
+
+    protected function casts(): array
+    {
+        return [
+            'original_deposit' => 'decimal:2',
+            'deduction_amount' => 'decimal:2',
+            'refunded_amount'  => 'decimal:2',
+            'refunded_at'      => 'datetime',
+        ];
+    }
+
+    public function booking(): BelongsTo
+    {
+        return $this->belongsTo(Booking::class, 'booking_id', 'booking_id');
+    }
 }

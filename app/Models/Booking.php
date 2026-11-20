@@ -84,4 +84,22 @@ class Booking extends Model
             'booking_id'
         );
     }
+
+    public function depositRefund(): HasOne
+    {
+        return $this->hasOne(
+            DepositRefund::class,
+            'booking_id',
+            'booking_id'
+        );
+    }
+
+    public function incidentTickets(): HasMany
+    {
+        return $this->hasMany(
+            IncidentMaintenanceTicket::class,
+            'booking_id',
+            'booking_id'
+        );
+    }
 }

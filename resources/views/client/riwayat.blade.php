@@ -104,6 +104,25 @@
                 </div>
             @endif
 
+            @if ($b->status === 'rejected')
+                <div style="margin-top:12px; background:#FFFBEB; border:1px solid #FDE68A; padding:14px 16px; border-radius:12px;">
+                    <div style="font-size:12px; font-weight:700; color:#92400E; margin-bottom:8px;">
+                        <i class="fa-solid fa-calendar-day"></i> Opsi Solusi: Ajukan Reschedule Jadwal Lain (Tanpa Biaya Tambahan) atau Hubungi Admin untuk Refund 100%
+                    </div>
+                    <form action="{{ route('client.bookings.reschedule', $b->booking_code) }}" method="POST" style="display:flex; gap:8px; flex-wrap:wrap; align-items:center;">
+                        @csrf
+                        <input type="date" name="reservation_date" min="{{ date('Y-m-d') }}" required style="padding:7px 12px; border:1px solid #CBD5E1; border-radius:8px; font-size:12px;">
+                        <select name="session_time" required style="padding:7px 12px; border:1px solid #CBD5E1; border-radius:8px; font-size:12px;">
+                            <option value="Pagi (08:00-12:00)">Pagi (08:00-12:00)</option>
+                            <option value="Siang (13:00-17:00)">Siang (13:00-17:00)</option>
+                        </select>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fa-solid fa-rotate"></i> Ajukan Jadwal Pengganti
+                        </button>
+                    </form>
+                </div>
+            @endif
+
             @if ($b->entryPass)
                 <div class="pass-strip">
                     <div>
@@ -111,6 +130,18 @@
                         <code>{{ $b->entryPass->qr_code_data }}</code>
                     </div>
                     <span>Status Kehadiran: <strong>{{ strtoupper($b->entryPass->checkin_status) }}</strong></span>
+                </div>
+            @endif
+
+            @if ($b->depositRefund)
+                <div style="margin-top:12px; background:#EFF6FF; border:1px solid #BFDBFE; padding:12px 16px; border-radius:12px; font-size:12px; color:#1E3A8A;">
+                    <strong><i class="fa-solid fa-money-bill-transfer"></i> Rincian Penyelesaian Deposit:</strong>
+                    Deposit Awal Rp {{ number_format($b->depositRefund->original_deposit, 0, ',', '.') }} —
+                    Potongan Insiden: <strong>Rp {{ number_format($b->depositRefund->deduction_amount, 0, ',', '.') }}</strong> —
+                    Dana Dikembalikan ke Client: <strong style="color:#059669;">Rp {{ number_format($b->depositRefund->refunded_amount, 0, ',', '.') }}</strong>
+                    @if($b->depositRefund->notes)
+                        <div style="margin-top:4px; color:#475569;">Catatan Laboran: {{ $b->depositRefund->notes }}</div>
+                    @endif
                 </div>
             @endif
 

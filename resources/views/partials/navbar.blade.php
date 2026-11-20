@@ -47,20 +47,24 @@
         </form>
 
         <div class="nav-actions">
-            <a href="{{ auth()->check() ? route('riwayat') : route('login') }}" class="icon-btn {{ request()->routeIs('riwayat') ? 'active' : '' }}" title="Riwayat Reservasi">
-                <i class="fa-solid fa-cart-shopping"></i>
-            </a>
-            <a href="{{ auth()->check() ? route('client.profile') : route('login') }}" class="icon-btn {{ request()->routeIs('client.profile') ? 'active' : '' }}" title="Profil & Pengaturan Akun">
-                <i class="fa-solid fa-user"></i>
-            </a>
-            @auth
+            @guest
+                <a href="{{ route('login') }}" class="nav-link" style="background:#091F5B; color:#fff; font-weight:700; border-radius:999px; padding:8px 18px;">
+                    <i class="fa-solid fa-right-to-bracket"></i> Masuk / Login
+                </a>
+            @else
+                <a href="{{ route('riwayat') }}" class="icon-btn {{ request()->routeIs('riwayat') ? 'active' : '' }}" title="Riwayat Reservasi">
+                    <i class="fa-solid fa-cart-shopping"></i>
+                </a>
+                <a href="{{ route('client.profile') }}" class="icon-btn {{ request()->routeIs('client.profile') ? 'active' : '' }}" title="Profil & Pengaturan Akun">
+                    <i class="fa-solid fa-user"></i>
+                </a>
                 <form action="{{ route('logout') }}" method="POST" style="display:inline;">
                     @csrf
                     <button type="submit" class="icon-btn" style="background:#DC2626; border:none; cursor:pointer;" title="Keluar Akun">
                         <i class="fa-solid fa-right-from-bracket"></i>
                     </button>
                 </form>
-            @endauth
+            @endguest
         </div>
     </nav>
 </div>

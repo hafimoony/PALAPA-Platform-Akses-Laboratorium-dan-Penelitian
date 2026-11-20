@@ -139,25 +139,31 @@ class StaffOperationController extends Controller
         $validated = $request->validate([
             'booking_id'             => 'required|exists:bookings,booking_id',
             'equipment_id'           => 'nullable|exists:lab_equipments,equipment_id',
-            'damage_severity'        => 'required|in:minor,moderate,severe',
-            'chronology_description' => 'required|string',
+            'severity'               => 'nullable|in:minor,moderate,severe',
+            'damage_severity'        => 'nullable|in:minor,moderate,severe',
+            'description'            => 'nullable|string',
+            'chronology_description' => 'nullable|string',
             'repair_cost_estimate'   => 'required|numeric|min:0',
         ]);
 
-        DB::transaction(function () use ($validated, $request) {
+        $severity = $request->input('severity') ?? $request->input('damage_severity') ?? 'minor';
+        $description = $request->input('description') ?? $request->input('chronology_description') ?? '-';
+
+        DB::transaction(function () use ($validated, $request, $severity, $description) {
             IncidentMaintenanceTicket::create([
-                'ticket_id'              => 'TKT-' . Str::upper(Str::random(8)),
-                'booking_id'             => $validated['booking_id'],
-                'equipment_id'           => $validated['equipment_id'] ?? null,
-                'reported_by_staff_id'   => $request->user()->user_id,
-                'damage_severity'        => $validated['damage_severity'],
-                'chronology_description' => $validated['chronology_description'],
-                'repair_cost_estimate'   => $validated['repair_cost_estimate'],
-                'deduct_from_deposit'    => $request->boolean('deduct_from_deposit', true),
+                'ticket_id'                     => 'TKT-' . Str::upper(Str::random(8)),
+                'booking_id'                    => $validated['booking_id'],
+                'equipment_id'                  => $validated['equipment_id'] ?? null,
+                'reported_by_staff_id'          => $request->user()->user_id,
+                'severity'                      => $severity,
+                'description'                   => $description,
+                'repair_cost_estimate'          => $validated['repair_cost_estimate'],
+                'penalty_deducted_from_deposit' => $validated['repair_cost_estimate'],
+                'status'                        => 'open',
             ]);
 
-            // Ubah status alat menjadi maintenance bila ada alat yang rusak
-            if (!empty($validated['equipment_id'])) {
+            // Ubah status alat menjadi maintenance bila ada alat yang rusak dan tingkat kerusakan moderate/severe
+            if (!empty($validated['equipment_id']) && in_array($severity, ['moderate', 'severe'])) {
                 LabEquipment::where('equipment_id', $validated['equipment_id'])
                     ->update(['status' => 'maintenance']);
             }
@@ -169,46 +175,42 @@ class StaffOperationController extends Controller
     public function processRefund(Request $request)
     {
         $validated = $request->validate([
-            'booking_id'            => 'required|exists:bookings,booking_id',
-            'refund_account_number' => 'required|string|max:50',
+            'booking_id'       => 'required|exists:bookings,booking_id',
+            'deduction_amount' => 'nullable|numeric|min:0',
+            'notes'            => 'nullable|string',
         ]);
 
         $booking = Booking::with('invoice')->findOrFail($validated['booking_id']);
         $invoice = $booking->invoice;
 
-        if (!$invoice) {
-            return back()->with('error', 'Invoice tidak ditemukan untuk reservasi ini.');
+        if (DepositRefund::where('booking_id', $booking->booking_id)->exists()) {
+            return back()->with('error', 'Pengembalian deposit untuk reservasi ini sudah diproses.');
         }
 
-        if (DepositRefund::where('invoice_id', $invoice->invoice_id)->exists()) {
-            return back()->with('error', 'Pengembalian deposit untuk invoice ini sudah diproses.');
+        $originalDeposit = (float) ($invoice?->security_deposit_fee ?? 200000);
+        $deduction       = (float) ($validated['deduction_amount'] ?? 0);
+        $refundedAmount  = max(0, $originalDeposit - $deduction);
+
+        $notes = $validated['notes'] ?? null;
+        if ($deduction > $originalDeposit) {
+            $selisih = $deduction - $originalDeposit;
+            $catatanSelisih = "Biaya kerusakan (Rp " . number_format($deduction, 0, ',', '.') . ") melebihi deposit (Rp " . number_format($originalDeposit, 0, ',', '.') . "). Tagihan selisih ke penyewa: Rp " . number_format($selisih, 0, ',', '.');
+            $notes = $notes ? $notes . " | " . $catatanSelisih : $catatanSelisih;
         }
-
-        // Hitung potongan otomatis dari tiket insiden yang dipotongkan ke deposit
-        $ticket = IncidentMaintenanceTicket::where('booking_id', $booking->booking_id)
-            ->where('deduct_from_deposit', true)
-            ->first();
-
-        $originalDeposit = (float) $invoice->security_deposit_fee;
-        $deduction       = $ticket ? min($originalDeposit, (float) $ticket->repair_cost_estimate) : 0.0;
-        $finalRefund     = max(0, $originalDeposit - $deduction);
-
-        $defaultVendorId = DB::table('payment_vendors')->value('vendor_id') ?? 'VND-001';
 
         DepositRefund::create([
-            'refund_id'               => 'RFD-' . Str::upper(Str::random(8)),
-            'invoice_id'              => $invoice->invoice_id,
-            'ticket_id'               => $ticket?->ticket_id,
-            'original_deposit_amount' => $originalDeposit,
-            'deduction_amount'        => $deduction,
-            'final_refund_amount'     => $finalRefund,
-            'refund_vendor_id'        => $defaultVendorId,
-            'refund_account_number'   => $validated['refund_account_number'],
-            'refund_status'           => 'refunded',
-            'processed_at'            => now(),
+            'refund_id'             => 'RFD-' . Str::upper(Str::random(8)),
+            'booking_id'            => $booking->booking_id,
+            'processed_by_staff_id' => $request->user()->user_id,
+            'original_deposit'      => $originalDeposit,
+            'deduction_amount'      => $deduction,
+            'refunded_amount'       => $refundedAmount,
+            'refund_status'         => 'refunded',
+            'notes'                 => $notes,
+            'refunded_at'           => now(),
         ]);
 
-        return back()->with('success', 'Pengembalian deposit sebesar Rp ' . number_format($finalRefund, 0, ',', '.') . ' berhasil diproses.');
+        return back()->with('success', 'Pengembalian deposit sebesar Rp ' . number_format($refundedAmount, 0, ',', '.') . ' berhasil diproses.');
     }
 
     // 5. LAPORAN / REKAP QUERY BUILDER (JOIN + GROUP BY + COUNT & SUM)

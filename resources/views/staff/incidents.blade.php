@@ -86,11 +86,16 @@
                     @csrf
                     <div class="mb-3">
                         <label class="form-label fw-bold" style="font-size:12px;">Pilih Reservasi untuk Refund Deposit</label>
-                        <select name="booking_id" class="form-select" required>
-                            <option value="">-- Pilih Reservasi --</option>
+                        <select name="booking_id" id="refundBookingSelect" class="form-select" required>
+                            <option value="" data-deposit="0" data-deduction="0">-- Pilih Reservasi --</option>
                             @foreach ($bookings as $b)
-                                <option value="{{ $b->booking_id }}">
-                                    {{ $b->booking_code }} (Deposit: Rp {{ number_format($b->invoice->security_deposit_fee ?? 0, 0, ',', '.') }})
+                                @php
+                                    $depositAmt = (float) ($b->invoice->security_deposit_fee ?? 200000);
+                                    $relatedTicket = $tickets->firstWhere('booking_id', $b->booking_id);
+                                    $suggestedDeduction = $relatedTicket ? (float) $relatedTicket->repair_cost_estimate : 0;
+                                @endphp
+                                <option value="{{ $b->booking_id }}" data-deposit="{{ $depositAmt }}" data-deduction="{{ $suggestedDeduction }}">
+                                    {{ $b->booking_code }} (Deposit: Rp {{ number_format($depositAmt, 0, ',', '.') }})
                                 </option>
                             @endforeach
                         </select>
@@ -98,8 +103,28 @@
 
                     <div class="mb-3">
                         <label class="form-label fw-bold" style="font-size:12px;">Potongan Denda Kerusakan (Rp)</label>
-                        <input type="number" name="deduction_amount" class="form-control" value="0" min="0" required>
-                        <small class="text-muted" style="font-size:11px;">Isi 0 jika seluruh fasilitas dan alat kembali dalam kondisi baik.</small>
+                        <input type="number" id="refundDeductionInput" name="deduction_amount" class="form-control" value="0" min="0" required>
+                        <small class="text-muted" style="font-size:11px;">Isi 0 jika tidak ada denda (seluruh deposit dikembalikan 100%).</small>
+                    </div>
+
+                    <!-- KOTAK KALKULASI OTOMATIS JUMLAH REFUND -->
+                    <div class="p-3 mb-3 rounded" style="background:#F0FDF4; border:1px solid #BBF7D0;">
+                        <div style="font-size:11px; color:#166534; font-weight:700; text-transform:uppercase; letter-spacing:0.5px;">
+                            <i class="fa-solid fa-calculator me-1"></i> Kalkulasi Otomatis Dana Refund:
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center mt-2">
+                            <span style="font-size:12px; color:#374151;">Deposit Awal Client:</span>
+                            <span id="previewDeposit" class="fw-bold text-dark">Rp 0</span>
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center mt-1">
+                            <span style="font-size:12px; color:#374151;">Potongan Denda Kerusakan:</span>
+                            <span id="previewDeduction" class="fw-bold text-danger">- Rp 0</span>
+                        </div>
+                        <hr class="my-2" style="border-top:1px dashed #86EFAC;">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span style="font-size:12px; font-weight:700; color:#166534;">Jumlah Refund (Dikembalikan ke Client):</span>
+                            <strong id="previewRefund" style="font-size:15px; color:#059669;">Rp 0</strong>
+                        </div>
                     </div>
 
                     <div class="mb-4">
@@ -115,6 +140,50 @@
         </div>
     </div>
 </div>
+
+@push('scripts')
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const select = document.getElementById('refundBookingSelect');
+        const deductionInput = document.getElementById('refundDeductionInput');
+        const previewDeposit = document.getElementById('previewDeposit');
+        const previewDeduction = document.getElementById('previewDeduction');
+        const previewRefund = document.getElementById('previewRefund');
+
+        function formatRupiah(val) {
+            return 'Rp ' + Number(val).toLocaleString('id-ID');
+        }
+
+        function updateCalculation() {
+            const opt = select.options[select.selectedIndex];
+            const deposit = opt ? parseFloat(opt.getAttribute('data-deposit') || 0) : 0;
+            const deduction = parseFloat(deductionInput.value || 0);
+            const refund = Math.max(0, deposit - deduction);
+
+            previewDeposit.textContent = formatRupiah(deposit);
+            previewDeduction.textContent = '- ' + formatRupiah(deduction);
+            previewRefund.textContent = formatRupiah(refund);
+        }
+
+        if (select) {
+            select.addEventListener('change', function () {
+                const opt = select.options[select.selectedIndex];
+                const suggestedDeduction = opt ? parseFloat(opt.getAttribute('data-deduction') || 0) : 0;
+                if (suggestedDeduction > 0) {
+                    deductionInput.value = suggestedDeduction;
+                }
+                updateCalculation();
+            });
+        }
+
+        if (deductionInput) {
+            deductionInput.addEventListener('input', updateCalculation);
+        }
+
+        updateCalculation();
+    });
+</script>
+@endpush
 
 <!-- TABEL RIWAYAT TIKET INSIDEN -->
 <div class="card mb-4">

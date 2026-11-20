@@ -2,10 +2,14 @@
 @section('title', 'Ubah Alat Laboratorium')
 
 @section('content')
-<x-card judul="Form Ubah Alat">
+<x-card judul="Form Ubah Alat ({{ $equipment->equipment_id }})">
     <form method="POST" action="{{ route('staff.equipments.update', $equipment->equipment_id) }}">
         @csrf @method('PUT')
         <div class="row">
+            <div class="col-md-12 mb-3">
+                <label class="form-label">ID Alat</label>
+                <input type="text" class="form-control bg-light fw-bold" value="{{ $equipment->equipment_id }}" readonly disabled>
+            </div>
             <div class="col-md-6 mb-3">
                 <label class="form-label">Laboratorium</label>
                 <select name="lab_id" class="form-select @error('lab_id') is-invalid @enderror">
