@@ -40,6 +40,9 @@ Route::get('/instrumen', function (\Illuminate\Http\Request $request) {
 Route::get('/pusat-bantuan', function () {
     return view('help.faq');
 })->name('bantuan');
+Route::get('/live-chat', function () {
+    return view('client.chat');
+})->name('client.chat.index');
 
 
 // ===================================================
@@ -267,6 +270,11 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/bookings', [StaffOperationController::class, 'bookingsIndex'])->name('bookings.index');
         Route::post('/bookings/{booking_id}/approve', [StaffOperationController::class, 'approveBooking'])->name('bookings.approve');
         Route::post('/bookings/{booking_id}/reject', [StaffOperationController::class, 'rejectBooking'])->name('bookings.reject');
+
+        // Konsultasi Riset & Live Chat Operator
+        Route::get('/live-chat', function () {
+            return view('staff.chat');
+        })->name('chat.index');
 
         // Transaksi T4: Check-In Entry Pass
         Route::get('/checkin', [StaffOperationController::class, 'checkinIndex'])->name('checkin.index');

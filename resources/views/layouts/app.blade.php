@@ -250,6 +250,12 @@
                         </a>
                     </li>
                     <li class="nav-item">
+                        <a href="{{ route('staff.chat.index') }}" class="nav-link {{ request()->routeIs('staff.chat.*') ? 'active' : '' }}">
+                            <i class="nav-icon fa-solid fa-headset"></i>
+                            <p>Live Chat Operator</p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
                         <a href="{{ route('staff.checkin.index') }}" class="nav-link {{ request()->routeIs('staff.checkin.*') ? 'active' : '' }}">
                             <i class="nav-icon fa-solid fa-qrcode"></i>
                             <p>Check-In Entry Pass</p>

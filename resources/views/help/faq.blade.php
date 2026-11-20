@@ -412,7 +412,7 @@
                         <div class="contact-desc livechat">Konsultasi teknis & instrumen lab.</div>
                     </div>
                 </div>
-                <a href="#" class="btn-action livechat">
+                <a href="{{ route('client.chat.index') }}" class="btn-action livechat">
                     <i class="fa-regular fa-message"></i> Mulai Chat
                 </a>
             </div>
@@ -505,7 +505,7 @@
     </div>
 
     <!-- FLOATING LIVE CHAT BUTTON (Tetap di pojok kanan bawah) -->
-    <a href="#" class="floating-chat" title="Mulai Live Chat">
+    <a href="{{ route('client.chat.index') }}" class="floating-chat" title="Mulai Live Chat">
         <i class="fa-regular fa-comment-dots"></i>
     </a>
 
