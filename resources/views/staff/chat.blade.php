@@ -18,7 +18,7 @@
     /* --- KOLOM 1: INBOX / DAFTAR CHAT PENELITI --- */
     .chat-list-panel {
         width: 320px;
-        min-width: 300px;
+        min-width: 280px;
         border-right: 1px solid #E2E8F0;
         display: flex;
         flex-direction: column;
@@ -57,6 +57,7 @@
         display: flex;
         gap: 6px;
         margin-top: 10px;
+        flex-wrap: wrap;
     }
     .filter-tab-pill {
         border: none;
@@ -147,6 +148,9 @@
         color: #3B82F6;
         font-weight: 600;
         margin-bottom: 2px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
     }
     .chat-preview {
         font-size: 12px;
@@ -173,11 +177,13 @@
         justify-content: space-between;
         align-items: center;
         flex-shrink: 0;
+        gap: 10px;
     }
     .convo-user-info {
         display: flex;
         align-items: center;
         gap: 12px;
+        min-width: 0;
     }
     .convo-name {
         font-size: 15px;
@@ -186,6 +192,7 @@
         display: flex;
         align-items: center;
         gap: 8px;
+        flex-wrap: wrap;
     }
     .convo-role-badge {
         background: #EFF6FF;
@@ -207,7 +214,8 @@
     }
     .convo-actions {
         display: flex;
-        gap: 8px;
+        gap: 6px;
+        flex-shrink: 0;
     }
     .convo-action-btn {
         background: transparent;
@@ -239,7 +247,6 @@
         background-size: 18px 18px;
     }
 
-    /* Message styling persis Image 2 */
     .c-msg-row {
         display: flex;
         width: 100%;
@@ -252,13 +259,14 @@
     }
 
     .c-bubble {
-        max-width: 72%;
+        max-width: 75%;
         padding: 12px 16px;
         border-radius: 14px;
         font-size: 13px;
         line-height: 1.5;
         box-shadow: 0 1px 4px rgba(0,0,0,0.04);
         position: relative;
+        word-wrap: break-word;
     }
     .c-bubble.client {
         background: #ffffff;
@@ -287,69 +295,7 @@
     .c-bubble.client .c-bubble-time { color: #94A3B8; }
     .c-bubble.staff .c-bubble-time { color: #BFDBFE; }
 
-    /* Rekomendasi Alat Box in Staff Convo */
-    .staff-rekom-box {
-        background: #ffffff;
-        border: 1px solid #DBEAFE;
-        border-radius: 12px;
-        padding: 14px;
-        margin-top: 10px;
-        color: #1E293B;
-        box-shadow: 0 4px 12px rgba(37, 99, 235, 0.08);
-    }
-    .staff-rekom-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 8px;
-    }
-    .staff-rekom-header strong {
-        color: #1D4ED8;
-        font-size: 11px;
-        letter-spacing: 0.5px;
-    }
-    .staff-rekom-title {
-        font-size: 14px;
-        font-weight: 800;
-        color: #091F5B;
-    }
-    .staff-rekom-grid {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 8px;
-        background: #F8FAFC;
-        padding: 8px 12px;
-        border-radius: 8px;
-        margin: 8px 0 12px 0;
-        font-size: 11px;
-    }
-    .staff-rekom-grid span { color: #64748B; }
-    .staff-rekom-grid strong { color: #091F5B; }
-    .staff-rekom-btns {
-        display: flex;
-        gap: 8px;
-    }
-    .staff-rekom-btns button {
-        flex: 1;
-        padding: 6px 12px;
-        border-radius: 6px;
-        font-size: 11.5px;
-        font-weight: 600;
-        cursor: pointer;
-        transition: all 0.2s;
-    }
-    .btn-rekom-detail {
-        background: #ffffff;
-        border: 1px solid #CBD5E1;
-        color: #334155;
-    }
-    .btn-rekom-jadwal {
-        background: #0047BA;
-        border: 1px solid #0047BA;
-        color: #ffffff;
-    }
-
-    /* Quick Reply Bar (Persis Image 2) */
+    /* Quick Reply Bar */
     .quick-replies-bar {
         background: #ffffff;
         border-top: 1px solid #F1F5F9;
@@ -358,6 +304,7 @@
         align-items: center;
         gap: 8px;
         overflow-x: auto;
+        flex-shrink: 0;
     }
     .quick-label {
         font-size: 10px;
@@ -396,6 +343,7 @@
     }
     .convo-input-field {
         flex: 1;
+        min-width: 0;
         background: #F8FAFC;
         border: 1px solid #CBD5E1;
         border-radius: 10px;
@@ -420,6 +368,7 @@
         display: flex;
         align-items: center;
         gap: 6px;
+        flex-shrink: 0;
         transition: background 0.2s;
     }
     .btn-staff-send:hover {
@@ -428,8 +377,8 @@
 
     /* --- KOLOM 3: DETAIL PROFIL & STATUS SAMPEL (KANAN) --- */
     .client-detail-panel {
-        width: 320px;
-        min-width: 290px;
+        width: 310px;
+        min-width: 280px;
         background: #ffffff;
         overflow-y: auto;
         padding: 20px 18px;
@@ -476,6 +425,7 @@
         justify-content: center;
         gap: 6px;
         margin-top: 10px;
+        flex-wrap: wrap;
     }
     .p-pill {
         font-size: 10px;
@@ -486,16 +436,13 @@
     .p-pill-blue { background: #EFF6FF; color: #1D4ED8; border: 1px solid #BFDBFE; }
     .p-pill-green { background: #ECFDF5; color: #047857; border: 1px solid #A7F3D0; }
 
-    /* Box Info Registrasi */
     .reg-info-box {
         background: #F8FAFC;
         border: 1px solid #E2E8F0;
         border-radius: 12px;
         padding: 14px;
     }
-    .reg-item {
-        margin-bottom: 10px;
-    }
+    .reg-item { margin-bottom: 10px; }
     .reg-item:last-child { margin-bottom: 0; }
     .reg-label {
         font-size: 10px;
@@ -510,7 +457,6 @@
         margin-top: 2px;
     }
 
-    /* Catatan Internal Staf */
     .notes-box {
         background: #FFFBEB;
         border: 1px solid #FDE68A;
@@ -539,7 +485,6 @@
         justify-content: space-between;
     }
 
-    /* Kondisi Cleanroom & Sensor */
     .sensor-box {
         background: #F0FDF4;
         border: 1px solid #BBF7D0;
@@ -562,7 +507,6 @@
     .sensor-row span { color: #374151; }
     .sensor-row strong { color: #166534; }
 
-    /* Action buttons in right panel */
     .btn-side-action {
         width: 100%;
         background: #ffffff;
@@ -584,6 +528,41 @@
         border-color: #94A3B8;
         color: #091F5B;
     }
+
+    /* --- RESPONSIVE BREAKPOINTS (SPLIT SCREEN & TABLET/MOBILE) --- */
+    @media (max-width: 1280px) {
+        .client-detail-panel {
+            display: none;
+        }
+        .chat-list-panel {
+            width: 250px;
+            min-width: 220px;
+        }
+    }
+
+    @media (max-width: 820px) {
+        .chat-operator-layout {
+            flex-direction: column;
+            height: auto;
+            min-height: calc(100vh - 70px);
+            overflow-y: auto;
+        }
+        .chat-list-panel {
+            width: 100%;
+            min-width: 100%;
+            max-height: 210px;
+            border-right: none;
+            border-bottom: 1px solid #E2E8F0;
+        }
+        .chat-convo-panel {
+            width: 100%;
+            min-height: 460px;
+            border-right: none;
+        }
+        .c-bubble {
+            max-width: 88%;
+        }
+    }
 </style>
 @endpush
 
@@ -595,90 +574,63 @@
         <div class="panel-search-box">
             <div class="search-input-wrap">
                 <i class="fa-solid fa-magnifying-glass"></i>
-                <input type="text" placeholder="Filter nama / instansi..." id="filterUserChat">
+                <input type="text" placeholder="Filter nama / instansi..." id="filterUserChat" onkeyup="filterThreadList(this.value)">
             </div>
             <div class="filter-tabs">
-                <button class="filter-tab-pill active">Semua (4)</button>
-                <button class="filter-tab-pill">Respon (1)</button>
-                <button class="filter-tab-pill">Aktif (2)</button>
+                <button type="button" class="filter-tab-pill active">Semua ({{ $threads->count() }})</button>
+                <button type="button" class="filter-tab-pill">Aktif</button>
             </div>
         </div>
 
         <div class="chat-scroll-list">
-            <!-- Item 1: Dr. Hendra (Active) -->
-            <div class="chat-item active" onclick="selectChat('hendra')">
-                <div class="user-avatar-badge online">DH</div>
-                <div class="chat-item-body">
-                    <div class="chat-item-head">
-                        <div class="chat-name">Dr. Hendra S.</div>
-                        <div class="chat-time">Baru</div>
+            @forelse ($threads as $t)
+                @php
+                    $initials = strtoupper(substr($t->name, 0, 2));
+                @endphp
+                <div class="chat-item" id="thread-{{ $t->user_id }}" data-name="{{ strtolower($t->name . ' ' . $t->email) }}" onclick="selectRealChat('{{ $t->user_id }}', '{{ addslashes($t->name) }}', '{{ addslashes($t->email) }}', '{{ $initials }}', this)">
+                    <div class="user-avatar-badge online">{{ $initials }}</div>
+                    <div class="chat-item-body">
+                        <div class="chat-item-head">
+                            <div class="chat-name">{{ $t->name }}</div>
+                            <div class="chat-time">{{ \Carbon\Carbon::parse($t->last_time)->format('H:i') }}</div>
+                        </div>
+                        <div class="chat-meta-inst">{{ $t->email }}</div>
+                        <div class="chat-preview">
+                            @if ($t->unread_count > 0)
+                                <strong style="color:#0047BA;">{{ $t->unread_count }} pesan baru belum dibaca</strong>
+                            @else
+                                Klik untuk membuka sesi chat...
+                            @endif
+                        </div>
                     </div>
-                    <div class="chat-meta-inst">BRIN • GC-MS</div>
-                    <div class="chat-preview">Belum ada percakapan baru</div>
                 </div>
-            </div>
-
-            <!-- Item 2: Prof. Ratna Dewi -->
-            <div class="chat-item" onclick="selectChat('ratna')">
-                <div class="user-avatar-badge online">RD</div>
-                <div class="chat-item-body">
-                    <div class="chat-item-head">
-                        <div class="chat-name">Prof. Ratna Dewi</div>
-                        <div class="chat-time">Baru</div>
-                    </div>
-                    <div class="chat-meta-inst">ITB • Difraksi Sinar-X</div>
-                    <div class="chat-preview">Menunggu respon staf...</div>
+            @empty
+                <div class="p-4 text-center text-muted" style="font-size:12.5px;">
+                    Belum ada pesan masuk dari Client. Kirim pesan dari halaman <code>/live-chat</code> akun Client untuk memulai.
                 </div>
-            </div>
-
-            <!-- Item 3: Ir. Bambang -->
-            <div class="chat-item" onclick="selectChat('bambang')">
-                <div class="user-avatar-badge">BP</div>
-                <div class="chat-item-body">
-                    <div class="chat-item-head">
-                        <div class="chat-name">Ir. Bambang P.</div>
-                        <div class="chat-time">Kemarin</div>
-                    </div>
-                    <div class="chat-meta-inst">UGM • SEM-EDX</div>
-                    <div class="chat-preview">Sesi konsultasi lab...</div>
-                </div>
-            </div>
-
-            <!-- Item 4: Dr. Ahmad Fauzi -->
-            <div class="chat-item" onclick="selectChat('ahmad')">
-                <div class="user-avatar-badge">AF</div>
-                <div class="chat-item-body">
-                    <div class="chat-item-head">
-                        <div class="chat-name">Dr. Ahmad Fauzi</div>
-                        <div class="chat-time">Kemarin</div>
-                    </div>
-                    <div class="chat-meta-inst">UNAIR • Spektroskopi</div>
-                    <div class="chat-preview">Konsultasi instrumen...</div>
-                </div>
-            </div>
+            @endforelse
         </div>
     </div>
 
-    <!-- 2. KOLOM TENGAH: RUANG PERCAKAPAN AKTIF (BERSIH) -->
+    <!-- 2. KOLOM TENGAH: RUANG PERCAKAPAN AKTIF -->
     <div class="chat-convo-panel">
         <div class="convo-header">
             <div class="convo-user-info">
-                <div class="user-avatar-badge online">DH</div>
+                <div class="user-avatar-badge online" id="headerAvatar">PL</div>
                 <div>
                     <div class="convo-name">
-                        <span id="headerUserName">Dr. Hendra S.</span>
+                        <span id="headerUserName">Pilih Peneliti</span>
                         <span class="convo-role-badge">PENELITI</span>
                     </div>
                     <div class="convo-sub">
-                        ● Online <span>• BRIN (Riset Hayati)</span>
+                        ● Online <span id="headerSubInst">• Konsultasi Laboratorium</span>
                     </div>
                 </div>
             </div>
 
             <div class="convo-actions">
-                <button class="convo-action-btn" title="Cari Pesan"><i class="fa-solid fa-magnifying-glass"></i></button>
-                <button class="convo-action-btn" onclick="alert('Menghubungi nomor telepon resmi peneliti: 0812-9876-5432')" title="Telepon Peneliti"><i class="fa-solid fa-phone"></i></button>
-                <button class="convo-action-btn" title="Opsi"><i class="fa-solid fa-ellipsis-vertical"></i></button>
+                <button type="button" class="convo-action-btn" title="Cari Pesan"><i class="fa-solid fa-magnifying-glass"></i></button>
+                <button type="button" class="convo-action-btn" onclick="alert('Menghubungi saluran resmi peneliti...')" title="Telepon Peneliti"><i class="fa-solid fa-phone"></i></button>
             </div>
         </div>
 
@@ -687,30 +639,29 @@
                 <span class="badge bg-light text-muted border" style="font-size:10px;">Hari ini • Enkripsi End-to-End Lab</span>
             </div>
 
-            <!-- Empty State Notice Staff -->
             <div id="staffEmptyNotice" class="text-center my-auto py-5" style="color: #64748B;">
                 <div style="width: 54px; height: 54px; background: #EFF6FF; border-radius: 50%; color: #0047BA; display: inline-flex; align-items: center; justify-content: center; font-size: 22px; margin-bottom: 12px; box-shadow: 0 4px 12px rgba(0, 71, 186, 0.08);">
                     <i class="fa-solid fa-headset"></i>
                 </div>
                 <div style="font-weight: 700; color: #091F5B; font-size: 15px;">Ruang Konsultasi Peneliti Siap Digunakan</div>
                 <div style="font-size: 12.5px; color: #64748B; max-width: 440px; margin: 6px auto 0 auto; line-height: 1.5;">
-                    Belum ada obrolan dalam sesi ini. Anda dapat mengetik pesan balasan atau memilih opsi <strong>Balas Cepat</strong> di bawah untuk menyapa peneliti.
+                    Pilih peneliti di daftar atau ketik pesan balasan di bawah untuk memulai sesi konsultasi.
                 </div>
             </div>
         </div>
 
-        <!-- QUICK REPLY CHIPS (PERSIS GAMBAR 2) -->
+        <!-- QUICK REPLY CHIPS -->
         <div class="quick-replies-bar">
             <span class="quick-label"><i class="fa-solid fa-bolt me-1"></i> Balas Cepat:</span>
             <button type="button" class="quick-pill" onclick="insertQuickReply('Sampel fisik telah kami terima di loket registrasi dan sedang dalam tahap antrean sonikasi.')">Konfirmasi Terima Sampel</button>
-            <button type="button" class="quick-pill" onclick="insertQuickReply('Mohon patuhi standar keselamatan cleanroom: wajib jas lab katun 100%, masker partikulat, dan sarung tangan nitril.')">Kirim Prosedur Keselamatan Lab</button>
+            <button type="button" class="quick-pill" onclick="insertQuickReply('Mohon patuhi standar keselamatan cleanroom: wajib jas lab katun 100%, masker partikulat, dan sarung tangan nitril.')">Prosedur Keselamatan Lab</button>
             <button type="button" class="quick-pill" onclick="insertQuickReply('Mohon kirimkan lembar MSDS pelarut yang digunakan untuk melengkapi izin registrasi K3 laboratorium.')">Minta Data Tambahan</button>
         </div>
 
         <!-- CONVO INPUT -->
         <div class="convo-input-bar">
             <button type="button" class="convo-action-btn" onclick="alert('Lampirkan template SOP atau form verifikasi.')" title="Kirim Berkas SOP"><i class="fa-solid fa-paperclip"></i></button>
-            <input type="text" id="staffReplyInput" class="convo-input-field" placeholder="Ketik pesan balasan untuk Dr. Hendra S...." onkeydown="if(event.key==='Enter') sendStaffReply()">
+            <input type="text" id="staffReplyInput" class="convo-input-field" placeholder="Ketik pesan balasan untuk peneliti..." onkeydown="if(event.key==='Enter') sendStaffReply()">
             <button type="button" class="btn-staff-send" onclick="sendStaffReply()">
                 <i class="fa-solid fa-paper-plane"></i> Kirim
             </button>
@@ -720,17 +671,16 @@
     <!-- 3. KOLOM KANAN: DETAIL PROFIL & STATUS SAMPEL PENELITI -->
     <div class="client-detail-panel">
         <div class="profile-card-top">
-            <div class="large-user-avatar" id="sideAvatar">DH</div>
-            <div class="p-user-name" id="sideName">Dr. Hendra S.</div>
-            <div class="p-user-inst" id="sideInst">Badan Riset & Inovasi Nasional (BRIN)</div>
-            <div class="p-user-nip">NIP/ID Riset: BRIN-2024-9912</div>
+            <div class="large-user-avatar" id="sideAvatar">PL</div>
+            <div class="p-user-name" id="sideName">Peneliti PALAPA</div>
+            <div class="p-user-inst" id="sideInst">Instansi Riset Terdaftar</div>
+            <div class="p-user-nip">Status: Terverifikasi SIMPONI</div>
             <div class="p-badges-row">
                 <span class="p-pill p-pill-blue"><i class="fa-solid fa-check-circle me-1"></i> Akun Terverifikasi</span>
                 <span class="p-pill p-pill-green"><i class="fa-solid fa-crown me-1"></i> Tier VIP Riset</span>
             </div>
         </div>
 
-        <!-- Data Registrasi Sampel -->
         <div class="reg-info-box">
             <div class="reg-item">
                 <div class="reg-label">Nomor Registrasi Uji</div>
@@ -741,32 +691,26 @@
                 <div class="reg-val">GC-MS QP2020 NX</div>
             </div>
             <div class="reg-item">
-                <div class="reg-label">Jumlah Sampel</div>
-                <div class="reg-val">4 Sampel Daun Kelor</div>
-            </div>
-            <div class="reg-item">
                 <div class="reg-label">Status Sampel Fisik</div>
                 <div class="reg-val"><span class="badge bg-warning-subtle text-warning-emphasis border border-warning-subtle">Menunggu Penyerahan</span></div>
             </div>
         </div>
 
-        <!-- Catatan Internal Staf -->
         <div class="notes-box">
             <div class="notes-title"><i class="fa-solid fa-lock"></i> Catatan Internal Staf Lab (Privat)</div>
             <div class="notes-body">
-                "Peneliti memerlukan fast-track turnaround 24 jam untuk laporan hibah BRIN. Siapkan kolom DB-5MS pada instrumen GC-MS unit #2 besok pagi."
+                "Siapkan kolom standar dan verifikasi formulir K3 peneliti sebelum jadwal sesi dimulai."
             </div>
             <div class="notes-author">
-                <span>Diperbarui oleh: Budi S.</span>
-                <a href="javascript:void(0)" onclick="alert('Fitur edit catatan staf.')" style="color:#B45309; font-weight:700;">Edit Catatan</a>
+                <span>Operator PALAPA</span>
+                <a href="javascript:void(0)" onclick="alert('Fitur edit catatan staf.')" style="color:#B45309; font-weight:700;">Edit</a>
             </div>
         </div>
 
-        <!-- Kondisi Cleanroom & Gas Alat -->
         <div class="sensor-box">
             <div class="sensor-title"><i class="fa-solid fa-temperature-half me-1"></i> Kondisi Cleanroom & Gas Alat</div>
             <div class="sensor-row">
-                <span>Suhu Ruang GC-MS:</span>
+                <span>Suhu Ruang:</span>
                 <strong>21.4 &deg;C</strong>
             </div>
             <div class="sensor-row">
@@ -779,12 +723,11 @@
             </div>
         </div>
 
-        <!-- Action Buttons -->
         <div class="d-flex flex-column gap-2 mt-auto">
             <button type="button" class="btn-side-action" onclick="alert('Mencetak Lembar Serah Terima Sampel Resmi...')">
                 <i class="fa-solid fa-print text-primary"></i> Cetak Lembar Serah Terima
             </button>
-            <button type="button" class="btn-side-action" onclick="alert('Barcode sampel berhasil di-generate: BARCODE-PLP-IN98264')">
+            <button type="button" class="btn-side-action" onclick="alert('Barcode sampel berhasil di-generate.')">
                 <i class="fa-solid fa-barcode text-success"></i> Generate Barcode Sampel
             </button>
         </div>
@@ -795,74 +738,113 @@
 <script>
     const convoArea = document.getElementById('staffConvoArea');
     const replyInput = document.getElementById('staffReplyInput');
+    let activeClientId = null;
+    let staffChatTimer = null;
 
-    window.addEventListener('load', () => {
-        convoArea.scrollTop = convoArea.scrollHeight;
-    });
+    function filterThreadList(keyword) {
+        const q = keyword.toLowerCase();
+        document.querySelectorAll('.chat-item').forEach(el => {
+            const text = el.getAttribute('data-name') || '';
+            el.style.display = text.includes(q) ? 'flex' : 'none';
+        });
+    }
 
     function insertQuickReply(text) {
         replyInput.value = text;
         replyInput.focus();
     }
 
-    function sendStaffReply() {
+    function selectRealChat(clientId, name, email, initials, el) {
+        activeClientId = clientId;
+        document.querySelectorAll('.chat-item').forEach(item => item.classList.remove('active'));
+        if (el) el.classList.add('active');
+
+        document.getElementById('headerUserName').textContent = name;
+        document.getElementById('headerAvatar').textContent = initials;
+        document.getElementById('headerSubInst').textContent = `• ${email}`;
+        document.getElementById('sideName').textContent = name;
+        document.getElementById('sideInst').textContent = email;
+        document.getElementById('sideAvatar').textContent = initials;
+        replyInput.placeholder = `Ketik pesan balasan untuk ${name}...`;
+
+        loadStaffThreadMessages();
+        if (staffChatTimer) clearInterval(staffChatTimer);
+        staffChatTimer = setInterval(loadStaffThreadMessages, 3000);
+    }
+
+    async function loadStaffThreadMessages() {
+        if (!activeClientId) return;
+        try {
+            const res = await fetch(`/staff/live-chat/${activeClientId}/messages`);
+            if (!res.ok) return;
+            const messages = await res.json();
+
+            const emptyNotice = document.getElementById('staffEmptyNotice');
+            if (emptyNotice) emptyNotice.remove();
+
+            convoArea.querySelectorAll('.c-msg-row').forEach(el => el.remove());
+
+            messages.forEach(m => {
+                const isStaff = m.sender_role === 'staff';
+                const timeStr = m.created_at ? m.created_at.substring(11, 16) : '';
+                const row = document.createElement('div');
+                row.className = `c-msg-row ${isStaff ? 'staff' : 'client'}`;
+
+                if (isStaff) {
+                    row.innerHTML = `
+                        <div class="c-bubble staff">
+                            <div class="c-bubble-title">Anda (Operator Palapa Lab)</div>
+                            <div>${escapeHtml(m.message)}</div>
+                            <div class="c-bubble-time">${timeStr} • Terkirim <i class="fa-solid fa-check text-info"></i></div>
+                        </div>
+                    `;
+                } else {
+                    row.innerHTML = `
+                        <div class="c-bubble client">
+                            <div class="c-bubble-title">Peneliti / Client</div>
+                            <div>${escapeHtml(m.message)}</div>
+                            <div class="c-bubble-time">${timeStr}</div>
+                        </div>
+                    `;
+                }
+                convoArea.appendChild(row);
+            });
+
+            convoArea.scrollTop = convoArea.scrollHeight;
+        } catch (err) {}
+    }
+
+    async function sendStaffReply() {
+        if (!activeClientId) {
+            alert('Pilih nama peneliti di daftar sebelah kiri terlebih dahulu.');
+            return;
+        }
         const text = replyInput.value.trim();
         if (!text) return;
 
-        const emptyNotice = document.getElementById('staffEmptyNotice');
-        if (emptyNotice) emptyNotice.remove();
-
-        const timeNow = new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' }).replace('.', ':');
-
-        const row = document.createElement('div');
-        row.className = 'c-msg-row staff';
-        row.innerHTML = `
-            <div class="c-bubble staff">
-                <div class="c-bubble-title">Anda (Operator Palapa Lab)</div>
-                <div>${escapeHtml(text)}</div>
-                <div class="c-bubble-time">${timeNow} • Terkirim <i class="fa-solid fa-check text-info"></i></div>
-            </div>
-        `;
-        convoArea.appendChild(row);
         replyInput.value = '';
-        convoArea.scrollTop = convoArea.scrollHeight;
-    }
 
-    function selectChat(userId) {
-        document.querySelectorAll('.chat-item').forEach(el => el.classList.remove('active'));
-        event.currentTarget.classList.add('active');
+        await fetch(`/staff/live-chat/${activeClientId}/send`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': '{{ csrf_token() }}'
+            },
+            body: JSON.stringify({ message: text })
+        });
 
-        if (userId === 'hendra') {
-            document.getElementById('headerUserName').textContent = 'Dr. Hendra S.';
-            document.getElementById('sideName').textContent = 'Dr. Hendra S.';
-            document.getElementById('sideInst').textContent = 'Badan Riset & Inovasi Nasional (BRIN)';
-            document.getElementById('sideAvatar').textContent = 'DH';
-            replyInput.placeholder = 'Ketik pesan balasan untuk Dr. Hendra S....';
-        } else if (userId === 'ratna') {
-            document.getElementById('headerUserName').textContent = 'Prof. Ratna Dewi';
-            document.getElementById('sideName').textContent = 'Prof. Ratna Dewi';
-            document.getElementById('sideInst').textContent = 'Institut Teknologi Bandung (ITB)';
-            document.getElementById('sideAvatar').textContent = 'RD';
-            replyInput.placeholder = 'Ketik pesan balasan untuk Prof. Ratna Dewi...';
-        } else if (userId === 'bambang') {
-            document.getElementById('headerUserName').textContent = 'Ir. Bambang P.';
-            document.getElementById('sideName').textContent = 'Ir. Bambang P.';
-            document.getElementById('sideInst').textContent = 'Universitas Gadjah Mada (UGM)';
-            document.getElementById('sideAvatar').textContent = 'BP';
-            replyInput.placeholder = 'Ketik pesan balasan untuk Ir. Bambang P....';
-        } else if (userId === 'ahmad') {
-            document.getElementById('headerUserName').textContent = 'Dr. Ahmad Fauzi';
-            document.getElementById('sideName').textContent = 'Dr. Ahmad Fauzi';
-            document.getElementById('sideInst').textContent = 'Universitas Airlangga (UNAIR)';
-            document.getElementById('sideAvatar').textContent = 'AF';
-            replyInput.placeholder = 'Ketik pesan balasan untuk Dr. Ahmad Fauzi...';
-        }
+        loadStaffThreadMessages();
     }
 
     function escapeHtml(text) {
         const map = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' };
-        return text.replace(/[&<>"']/g, m => map[m]);
+        return String(text).replace(/[&<>"']/g, m => map[m]);
     }
+
+    window.addEventListener('load', () => {
+        const firstThread = document.querySelector('.chat-item');
+        if (firstThread) firstThread.click();
+    });
 </script>
 @endpush
 @endsection

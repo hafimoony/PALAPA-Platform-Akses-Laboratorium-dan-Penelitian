@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Web\LaboratoryController;
 use App\Http\Controllers\Web\BookingController;
 use App\Http\Controllers\Web\Admin\CampusController;
@@ -17,32 +18,30 @@ use App\Models\User;
 Route::get('/', [LaboratoryController::class, 'beranda'])->name('home');
 Route::get('/labs', [LaboratoryController::class, 'index'])->name('labs.index');
 Route::get('/labs/{id}', [LaboratoryController::class, 'show'])->name('labs.show');
+
 // Route Katalog Instrumen Riset (Publik)
-Route::get('/instrumen', function (\Illuminate\Http\Request $request) {
-    $query = \App\Models\LabEquipment::with(['laboratory.campus']);
+Route::get('/instrumen', function (Request $request) {$query = \App\Models\LabEquipment::with(['laboratory.campus']);
 
     if ($request->filled('search')) {
-        $search = $request->search;
+        $search =$request->search;
         $query->where(function ($q) use ($search) {
-            $q->where('equipment_name', 'ilike', "%{$search}%")
+            $q->where('equipment_name', 'ilike', "\%{$search}%")
               ->orWhere('brand_model', 'ilike', "%{$search}%");
         });
     }
 
     if ($request->filled('status')) {
-        $query->where('status', $request->status);
+        $query->where('status',$request->status);
     }
 
-    $equipments = $query->orderBy('equipment_name')->get();
+    $equipments =$query->orderBy('equipment_name')->get();
 
     return view('instruments.index', compact('equipments'));
 })->name('instruments.index');
+
 Route::get('/pusat-bantuan', function () {
     return view('help.faq');
 })->name('bantuan');
-Route::get('/live-chat', function () {
-    return view('client.chat');
-})->name('client.chat.index');
 
 
 // ===================================================
@@ -63,9 +62,8 @@ Route::middleware(['guest'])->group(function () {
         return view('auth.forgot-password');
     })->name('password.request');
 
-    Route::post('/forgot-password', function (Request $request) {
-        $request->validate(['email' => 'required|email']);
-        $user = User::where('email', $request->email)->first();
+    Route::post('/forgot-password', function (Request $request) {$request->validate(['email' => 'required|email']);
+        $user = User::where('email',$request->email)->first();
         if (!$user) {
             return back()->withErrors(['email' => 'Email instansi tidak ditemukan dalam sistem kami.']);
         }
@@ -85,10 +83,13 @@ Route::middleware(['auth'])->group(function () {
 
     // Area Khusus Client / Penyewa (Role 2)
     Route::middleware(['role:2'])->group(function () {
-        Route::get('/riwayat', function (\Illuminate\Http\Request $request) {
-            $bookings = \App\Models\Booking::with(['laboratory.campus', 'equipmentItems.equipment', 'invoice', 'entryPass', 'depositRefund'])
+        Route::get('/live-chat', function () {
+            return view('client.chat');
+        })->name('client.chat.index');
+
+        Route::get('/riwayat', function (Request $request) {$bookings = \App\Models\Booking::with(['laboratory.campus', 'equipmentItems.equipment', 'invoice', 'entryPass', 'depositRefund'])
                 ->whereHas('baseTransaction', function ($q) use ($request) {
-                    $q->where('user_id', $request->user()->user_id);
+                    $q->where('user_id',$request->user()->user_id);
                 })
                 ->orderByDesc('created_at')
                 ->get();
@@ -96,14 +97,13 @@ Route::middleware(['auth'])->group(function () {
             return view('client.riwayat', compact('bookings'));
         })->name('riwayat');
 
-        Route::post('/bookings/{booking_code}/reschedule', function (\Illuminate\Http\Request $request, string $booking_code) {
-            $request->validate([
+        Route::post('/bookings/{booking_code}/reschedule', function (Request $request, string $booking_code) {$request->validate([
                 'reservation_date' => 'required|date|after_or_equal:today',
                 'session_time'     => 'required|string|max:100',
             ]);
 
-            $booking = \App\Models\Booking::where('booking_code', $booking_code)
-                ->whereHas('baseTransaction', fn($q) => $q->where('user_id', $request->user()->user_id))
+            $booking = \App\Models\Booking::where('booking_code',$booking_code)
+                ->whereHas('baseTransaction', fn($q) => $q->where('user_id',$request->user()->user_id))
                 ->firstOrFail();
 
             $booking->update([
@@ -120,9 +120,9 @@ Route::middleware(['auth'])->group(function () {
             return view('client.profile');
         })->name('client.profile');
 
-        Route::post('/profil/update', function (\Illuminate\Http\Request $request) {
-            $user = $request->user();
-            $validated = $request->validate([
+        Route::post('/profil/update', function (Request $request) {
+            $user =$request->user();
+            $validated =$request->validate([
                 'name' => 'required|string|max:120',
                 'phone_number' => 'nullable|string|max:30',
             ]);
@@ -131,14 +131,13 @@ Route::middleware(['auth'])->group(function () {
             return back()->with('success', 'Data profil akun berhasil diperbarui.');
         })->name('client.profile.update');
 
-        Route::post('/profil/password', function (\Illuminate\Http\Request $request) {
-            $request->validate([
+        Route::post('/profil/password', function (Request $request) {$request->validate([
                 'current_password' => 'required|string',
                 'new_password' => 'required|string|min:8|confirmed',
             ]);
 
-            $user = $request->user();
-            if (!\Illuminate\Support\Facades\Hash::check($request->current_password, $user->password_hash)) {
+            $user =$request->user();
+            if (!\Illuminate\Support\Facades\Hash::check($request->current_password,$user->password_hash)) {
                 return back()->withErrors(['current_password' => 'Kata sandi lama tidak sesuai.']);
             }
 
@@ -149,19 +148,17 @@ Route::middleware(['auth'])->group(function () {
             return back()->with('success', 'Kata sandi akun berhasil diubah.');
         })->name('client.profile.password');
 
-        Route::get('/bookings/{booking_code}/invoice', function (\Illuminate\Http\Request $request, string $booking_code) {
-            $booking = \App\Models\Booking::with(['laboratory.campus', 'equipmentItems.equipment', 'invoice', 'baseTransaction.user'])
+        Route::get('/bookings/{booking_code}/invoice', function (Request $request, string $booking_code) {$booking = \App\Models\Booking::with(['laboratory.campus', 'equipmentItems.equipment', 'invoice', 'baseTransaction.user'])
                 ->where('booking_code', $booking_code)
-                ->whereHas('baseTransaction', fn($q) => $q->where('user_id', $request->user()->user_id))
+                ->whereHas('baseTransaction', fn($q) => $q->where('user_id',$request->user()->user_id))
                 ->firstOrFail();
 
             return view('client.invoice', compact('booking'));
         })->name('client.invoice');
 
-        Route::get('/bookings/{booking_code}/entry-pass', function (\Illuminate\Http\Request $request, string $booking_code) {
-            $booking = \App\Models\Booking::with(['laboratory.campus', 'entryPass', 'baseTransaction.user'])
+        Route::get('/bookings/{booking_code}/entry-pass', function (Request $request, string $booking_code) {$booking = \App\Models\Booking::with(['laboratory.campus', 'entryPass', 'baseTransaction.user'])
                 ->where('booking_code', $booking_code)
-                ->whereHas('baseTransaction', fn($q) => $q->where('user_id', $request->user()->user_id))
+                ->whereHas('baseTransaction', fn($q) => $q->where('user_id',$request->user()->user_id))
                 ->firstOrFail();
 
             return view('client.entry-pass', compact('booking'));
@@ -173,32 +170,58 @@ Route::middleware(['auth'])->group(function () {
         Route::post('/bookings', [BookingController::class, 'store'])->name('bookings.store');
         Route::post('/bookings/{booking_code}/check-payment', [BookingController::class, 'checkPayment'])->name('bookings.check-payment');
 
-        Route::get('/checkout/{booking_code?}', function (\Illuminate\Http\Request $request, ?string $booking_code = null) {
-            $query = \App\Models\Booking::with(['laboratory.campus', 'equipmentItems.equipment', 'invoice'])
-                ->whereHas('baseTransaction', fn($q) => $q->where('user_id', $request->user()->user_id));
+        Route::get('/checkout/{booking_code?}', function (Request $request, ?string $booking_code = null) {$query = \App\Models\Booking::with(['laboratory.campus', 'equipmentItems.equipment', 'invoice'])
+                ->whereHas('baseTransaction', fn($q) => $q->where('user_id',$request->user()->user_id));
 
-            $booking = $booking_code
-                ? $query->where('booking_code', $booking_code)->firstOrFail()
+            $booking =$booking_code
+                ? $query->where('booking_code',$booking_code)->firstOrFail()
                 : $query->orderByDesc('created_at')->first();
 
-            $vendors = \Illuminate\Support\Facades\DB::table('payment_vendors')
+            $vendors = DB::table('payment_vendors')
                 ->where('is_active', true)
                 ->orderBy('vendor_id')
                 ->get();
 
             return view('client.checkout', compact('booking', 'vendors'));
         })->name('client.checkout');
+
+        // API Live Chat Client (Ambil & Kirim Pesan)
+        Route::get('/chat/messages', function (Request $request) {
+            $clientId =$request->user()->user_id;
+            $messages = DB::table('support_chats')
+                ->where('client_user_id', $clientId)
+                ->orderBy('id', 'asc')
+                ->get();
+
+            return response()->json($messages);
+        })->name('client.chat.messages');
+
+        Route::post('/chat/send', function (Request $request) {$request->validate(['message' => 'required|string|max:1000']);
+            $user =$request->user();
+
+            DB::table('support_chats')->insert([
+                'client_user_id' => $user->user_id,
+                'sender_user_id' => $user->user_id,
+                'sender_role'    => 'client',
+                'message'        => $request->message,
+                'is_read'        => false,
+                'created_at'     => now(),
+                'updated_at'     => now(),
+            ]);
+
+            return response()->json(['status' => 'ok']);
+        })->name('client.chat.send');
     });
 
     // Area Khusus Staff / Laboran (Role 1)
     Route::middleware(['role:1'])->prefix('staff')->name('staff.')->group(function () {
-        Route::get('/calendar', function (\Illuminate\Http\Request $request) {
-            $month = $request->input('month', now()->format('Y-m'));
+        Route::get('/calendar', function (Request $request) {
+            $month =$request->input('month', now()->format('Y-m'));
             $start = \Carbon\Carbon::parse($month . '-01')->startOfMonth();
-            $end = $start->copy()->endOfMonth();
+            $end =$start->copy()->endOfMonth();
 
             $bookings = \App\Models\Booking::with(['laboratory.campus', 'baseTransaction.user'])
-                ->whereBetween('reservation_date', [$start->toDateString(), $end->toDateString()])
+                ->whereBetween('reservation_date', [$start->toDateString(),$end->toDateString()])
                 ->orderBy('reservation_date')
                 ->orderBy('session_time')
                 ->get();
@@ -208,8 +231,7 @@ Route::middleware(['auth'])->group(function () {
 
         Route::get('/lab-management', function () {
             $laboratories = \App\Models\Laboratory::with(['campus', 'equipments'])
-                ->withCount(['bookings' => function ($q) {
-                    $q->whereIn('status', ['paid_confirmed', 'approved', 'completed']);
+                ->withCount(['bookings' => function ($q) {$q->whereIn('status', ['paid_confirmed', 'approved', 'completed']);
                 }])
                 ->orderBy('lab_name')
                 ->get();
@@ -220,7 +242,7 @@ Route::middleware(['auth'])->group(function () {
         Route::post('/lab-management/{id}/toggle-status', function (string $id) {
             $lab = \App\Models\Laboratory::findOrFail($id);
             $newStatus = ($lab->operational_status ?? 'active') === 'active' ? 'maintenance' : 'active';
-            $lab->update(['operational_status' => $newStatus]);
+            $lab->update(['operational_status' =>$newStatus]);
 
             return back()->with('success', "Status operasional {$lab->lab_name} diubah menjadi {$newStatus}.");
         })->name('lab-management.toggle');
@@ -229,9 +251,9 @@ Route::middleware(['auth'])->group(function () {
             return view('staff.profile');
         })->name('profile');
 
-        Route::post('/profile/update', function (\Illuminate\Http\Request $request) {
-            $user = $request->user();
-            $validated = $request->validate([
+        Route::post('/profile/update', function (Request $request) {
+            $user =$request->user();
+            $validated =$request->validate([
                 'name' => 'required|string|max:120',
                 'phone_number' => 'nullable|string|max:30',
             ]);
@@ -240,14 +262,13 @@ Route::middleware(['auth'])->group(function () {
             return back()->with('success', 'Data profil Staff berhasil diperbarui.');
         })->name('profile.update');
 
-        Route::post('/profile/password', function (\Illuminate\Http\Request $request) {
-            $request->validate([
+        Route::post('/profile/password', function (Request $request) {$request->validate([
                 'current_password' => 'required|string',
                 'new_password' => 'required|string|min:8|confirmed',
             ]);
 
-            $user = $request->user();
-            if (!\Illuminate\Support\Facades\Hash::check($request->current_password, $user->password_hash)) {
+            $user =$request->user();
+            if (!\Illuminate\Support\Facades\Hash::check($request->current_password,$user->password_hash)) {
                 return back()->withErrors(['current_password' => 'Kata sandi lama tidak sesuai.']);
             }
 
@@ -271,10 +292,52 @@ Route::middleware(['auth'])->group(function () {
         Route::post('/bookings/{booking_id}/approve', [StaffOperationController::class, 'approveBooking'])->name('bookings.approve');
         Route::post('/bookings/{booking_id}/reject', [StaffOperationController::class, 'rejectBooking'])->name('bookings.reject');
 
-        // Konsultasi Riset & Live Chat Operator
+        // Konsultasi Riset & Live Chat Operator (Halaman + API Messages & Send)
         Route::get('/live-chat', function () {
-            return view('staff.chat');
+            $threads = DB::table('support_chats')
+                ->join('users', 'support_chats.client_user_id', '=', 'users.user_id')
+                ->select(
+                    'users.user_id',
+                    'users.name',
+                    'users.email',
+                    DB::raw('MAX(support_chats.created_at) as last_time'),
+                    DB::raw("SUM(CASE WHEN support_chats.sender_role = 'client' AND support_chats.is_read = false THEN 1 ELSE 0 END) as unread_count")
+                )
+                ->groupBy('users.user_id', 'users.name', 'users.email')
+                ->orderByDesc('last_time')
+                ->get();
+
+            return view('staff.chat', compact('threads'));
         })->name('chat.index');
+
+        Route::get('/live-chat/{client_id}/messages', function (string $client_id) {
+            DB::table('support_chats')
+                ->where('client_user_id', $client_id)
+                ->where('sender_role', 'client')
+                ->update(['is_read' => true]);
+
+            $messages = DB::table('support_chats')
+                ->where('client_user_id', $client_id)
+                ->orderBy('id', 'asc')
+                ->get();
+
+            return response()->json($messages);
+        })->name('chat.messages');
+
+        Route::post('/live-chat/{client_id}/send', function (Request $request, string $client_id) {$request->validate(['message' => 'required|string|max:1000']);
+
+            DB::table('support_chats')->insert([
+                'client_user_id' => $client_id,
+                'sender_user_id' => $request->user()->user_id,
+                'sender_role'    => 'staff',
+                'message'        => $request->message,
+                'is_read'        => true,
+                'created_at'     => now(),
+                'updated_at'     => now(),
+            ]);
+
+            return response()->json(['status' => 'ok']);
+        })->name('chat.send');
 
         // Transaksi T4: Check-In Entry Pass
         Route::get('/checkin', [StaffOperationController::class, 'checkinIndex'])->name('checkin.index');

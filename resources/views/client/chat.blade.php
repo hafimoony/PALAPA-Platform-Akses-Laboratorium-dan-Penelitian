@@ -62,7 +62,7 @@
             font-weight: 700;
         }
 
-        /* --- CHAT HEADER (IMAGE 1) --- */
+        /* --- CHAT HEADER --- */
         .chat-header {
             background: #ffffff;
             border-bottom: 1px solid #E2E8F0;
@@ -192,7 +192,7 @@
             color: #091F5B;
         }
 
-        /* --- CHAT BODY (CANVAS PERSIS IMAGE 1) --- */
+        /* --- CHAT BODY --- */
         .chat-body {
             flex: 1;
             overflow-y: auto;
@@ -206,7 +206,6 @@
             scroll-behavior: smooth;
         }
 
-        /* Security encrypted banner */
         .encrypted-banner {
             align-self: center;
             background: #EFF6FF;
@@ -236,7 +235,6 @@
             letter-spacing: 0.5px;
         }
 
-        /* Message Bubbles */
         .msg-row {
             display: flex;
             width: 100%;
@@ -294,167 +292,7 @@
             color: #94A3B8;
         }
 
-        /* REKOMENDASI ALAT CARD PERSIS IMAGE 1 */
-        .rekomendasi-card {
-            background: #ffffff;
-            border: 1px solid #DBEAFE;
-            border-radius: 14px;
-            padding: 16px;
-            margin-top: 8px;
-            box-shadow: 0 4px 14px rgba(37, 99, 235, 0.08);
-            max-width: 480px;
-        }
-        .rekomendasi-badge-bar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 12px;
-        }
-        .tag-rekomendasi {
-            color: #1D4ED8;
-            font-weight: 700;
-            font-size: 12px;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-        .slot-badge {
-            background: #EFF6FF;
-            color: #2563EB;
-            font-size: 11px;
-            font-weight: 700;
-            padding: 3px 10px;
-            border-radius: 999px;
-            border: 1px solid #BFDBFE;
-        }
-        .alat-flex {
-            display: flex;
-            gap: 14px;
-            align-items: center;
-            margin-bottom: 14px;
-        }
-        .alat-thumb {
-            width: 72px;
-            height: 72px;
-            border-radius: 10px;
-            background: #F1F5F9;
-            object-fit: cover;
-            border: 1px solid #E2E8F0;
-        }
-        .alat-info-title {
-            font-size: 15px;
-            font-weight: 800;
-            color: #091F5B;
-        }
-        .alat-info-sub {
-            font-size: 12px;
-            color: #64748B;
-            margin-top: 2px;
-        }
-        .alat-info-price {
-            font-size: 13px;
-            font-weight: 700;
-            color: #0047BA;
-            margin-top: 4px;
-        }
-        .alat-btn-group {
-            display: flex;
-            gap: 8px;
-        }
-        .btn-reservasi-slot {
-            flex: 2;
-            background: #0047BA;
-            color: #ffffff;
-            border: none;
-            padding: 9px 16px;
-            border-radius: 8px;
-            font-size: 12px;
-            font-weight: 700;
-            cursor: pointer;
-            text-decoration: none;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 6px;
-            transition: background 0.2s;
-        }
-        .btn-reservasi-slot:hover {
-            background: #091F5B;
-        }
-        .btn-sop {
-            flex: 1;
-            background: #ffffff;
-            color: #334155;
-            border: 1px solid #CBD5E1;
-            padding: 9px 14px;
-            border-radius: 8px;
-            font-size: 12px;
-            font-weight: 600;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 6px;
-            transition: all 0.2s;
-        }
-        .btn-sop:hover {
-            background: #F8FAFC;
-            border-color: #94A3B8;
-        }
-
-        /* ATTACHMENT CARD PERSIS IMAGE 1 */
-        .attachment-card {
-            background: #ffffff;
-            border: 1px solid #E2E8F0;
-            border-radius: 12px;
-            padding: 12px 14px;
-            margin-top: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            color: #1E293B;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.04);
-        }
-        .attach-left {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-        .attach-icon {
-            width: 38px;
-            height: 38px;
-            border-radius: 8px;
-            background: #FEE2E2;
-            color: #DC2626;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 18px;
-        }
-        .attach-name {
-            font-size: 13px;
-            font-weight: 700;
-            color: #0F172A;
-        }
-        .attach-size {
-            font-size: 11px;
-            color: #64748B;
-            margin-top: 2px;
-        }
-        .btn-download-attach {
-            color: #2563EB;
-            font-size: 16px;
-            cursor: pointer;
-            padding: 6px;
-            border-radius: 6px;
-            transition: background 0.2s;
-            text-decoration: none;
-        }
-        .btn-download-attach:hover {
-            background: #EFF6FF;
-        }
-
-        /* --- CHAT INPUT BAR PERSIS IMAGE 1 --- */
+        /* --- CHAT INPUT BAR --- */
         .chat-input-bar {
             background: #ffffff;
             border-top: 1px solid #E2E8F0;
@@ -569,7 +407,7 @@
 </head>
 <body>
 
-    <!-- NAVBAR MINI PALAPA (Sesuai tema aplikasi) -->
+    <!-- NAVBAR MINI PALAPA -->
     <header class="palapa-top-nav">
         <a href="{{ route('home') }}" class="nav-brand-group">
             <img src="{{ asset('images/logo-palapa.jpg') }}" alt="PALAPA" onerror="this.src='https://placehold.co/36x36/091F5B/FFFFFF?text=P'">
@@ -587,7 +425,7 @@
         </nav>
     </header>
 
-    <!-- CHAT HEADER PERSIS SEPERTI GAMBAR 1 -->
+    <!-- CHAT HEADER -->
     <div class="chat-header">
         <div class="header-left">
             <a href="{{ route('bantuan') }}" class="btn-back" title="Kembali ke Pusat Bantuan">
@@ -621,30 +459,27 @@
         </div>
     </div>
 
-    <!-- CHAT BODY BERSIH TANPA CHAT DAHULU -->
+    <!-- CHAT BODY -->
     <div class="chat-body" id="chatContainer">
-        <!-- Banner Enkripsi -->
         <div class="encrypted-banner">
             <i class="fa-solid fa-lock"></i>
             <span>Pesan dan panggilan terenkripsi end-to-end. Tidak seorang pun di luar chat ini yang dapat membaca atau mendengarkannya.</span>
         </div>
 
-        <!-- Pemisah Tanggal -->
         <div class="date-divider">HARI INI</div>
 
-        <!-- Empty State Notice (Hilang otomatis saat ada chat baru) -->
-        <div id="emptyChatNotice" class="text-center my-auto py-5" style="color: #64748B;">
+        <div id="emptyChatNotice" style="text-align:center; margin:auto; padding:40px 16px; color: #64748B;">
             <div style="width: 58px; height: 58px; background: #EBF3FF; border-radius: 50%; color: #091F5B; display: inline-flex; align-items: center; justify-content: center; font-size: 24px; margin-bottom: 12px; box-shadow: 0 4px 12px rgba(9, 31, 91, 0.08);">
                 <i class="fa-solid fa-comments"></i>
             </div>
             <div style="font-weight: 700; color: #091F5B; font-size: 16px;">Ruang Konsultasi Laboratorium</div>
             <div style="font-size: 13px; color: #64748B; max-width: 460px; margin: 6px auto 0 auto; line-height: 1.5;">
-                Belum ada percakapan. Silakan ketik pesan di kolom bawah untuk memulai konsultasi teknis pengujian sampel dan ketersediaan instrumen dengan Operator Lab Palapa.
+                Halo <strong>{{ auth()->user()->name ?? 'Peneliti' }}</strong>! Silakan ketik pesan di kolom bawah untuk memulai konsultasi teknis pengujian sampel dan ketersediaan instrumen dengan Operator Lab Palapa.
             </div>
         </div>
     </div>
 
-    <!-- CHAT INPUT BAR PERSIS GAMBAR 1 -->
+    <!-- CHAT INPUT BAR -->
     <footer class="chat-input-bar">
         <button class="input-icon-btn" onclick="insertEmoji('😊')" title="Emoji"><i class="fa-regular fa-face-smile"></i></button>
         <button class="input-icon-btn" onclick="attachSampleFile()" title="Lampirkan Dokumen Sampel / PDF"><i class="fa-solid fa-paperclip"></i></button>
@@ -673,11 +508,7 @@
     <script>
         const chatContainer = document.getElementById('chatContainer');
         const chatInput = document.getElementById('chatInputText');
-
-        // Scroll to bottom on load
-        window.addEventListener('load', () => {
-            chatContainer.scrollTop = chatContainer.scrollHeight;
-        });
+        const isLoggedInClient = {{ auth()->check() ? 'true' : 'false' }};
 
         function handleEnter(e) {
             if (e.key === 'Enter') {
@@ -693,97 +524,79 @@
         function attachSampleFile() {
             const fileName = prompt("Masukkan nama dokumen lampiran sampel yang ingin diunggah:", "Hasil_Uji_Awal_Kelor.pdf");
             if (fileName) {
-                appendClientAttachment(fileName);
+                chatInput.value = `[Lampiran Dokumen PDF: ${fileName}]`;
+                sendClientMessage();
             }
         }
 
-        function sendClientMessage() {
+        async function loadClientMessages() {
+            if (!isLoggedInClient) return;
+            try {
+                const res = await fetch("{{ route('client.chat.messages') }}");
+                if (!res.ok) return;
+                const messages = await res.json();
+
+                if (messages.length > 0) {
+                    const emptyNotice = document.getElementById('emptyChatNotice');
+                    if (emptyNotice) emptyNotice.remove();
+
+                    chatContainer.querySelectorAll('.msg-row').forEach(el => el.remove());
+
+                    messages.forEach(m => {
+                        const isClient = m.sender_role === 'client';
+                        const timeStr = m.created_at ? m.created_at.substring(11, 16) : '';
+                        const row = document.createElement('div');
+                        row.className = `msg-row ${isClient ? 'client' : 'operator'}`;
+
+                        if (isClient) {
+                            row.innerHTML = `
+                                <div class="bubble client">
+                                    <div>${escapeHtml(m.message)}</div>
+                                    <div class="bubble-time">
+                                        ${timeStr} <i class="fa-solid fa-check-double" style="color:#93C5FD;"></i>
+                                    </div>
+                                </div>
+                            `;
+                        } else {
+                            row.innerHTML = `
+                                <div class="bubble operator">
+                                    <div class="bubble-sender">
+                                        <i class="fa-solid fa-user-gear"></i> Operator Lab • Cleanroom Palapa
+                                    </div>
+                                    <div>${escapeHtml(m.message)}</div>
+                                    <div class="bubble-time">${timeStr}</div>
+                                </div>
+                            `;
+                        }
+                        chatContainer.appendChild(row);
+                    });
+
+                    chatContainer.scrollTop = chatContainer.scrollHeight;
+                }
+            } catch (err) {}
+        }
+
+        async function sendClientMessage() {
+            if (!isLoggedInClient) {
+                window.location.href = "{{ route('login') }}";
+                return;
+            }
+
             const text = chatInput.value.trim();
             if (!text) return;
 
-            const emptyNotice = document.getElementById('emptyChatNotice');
-            if (emptyNotice) emptyNotice.remove();
-
-            const timeNow = new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' }).replace('.', ':');
-
-            const msgRow = document.createElement('div');
-            msgRow.className = 'msg-row client';
-            msgRow.innerHTML = `
-                <div class="bubble client">
-                    <div>${escapeHtml(text)}</div>
-                    <div class="bubble-time">
-                        ${timeNow} <i class="fa-solid fa-check" style="color:#93C5FD;"></i>
-                    </div>
-                </div>
-            `;
-            chatContainer.appendChild(msgRow);
             chatInput.value = '';
-            chatContainer.scrollTop = chatContainer.scrollHeight;
 
-            // Simulasi respon otomatis dari staf laboran setelah 1 detik
-            setTimeout(() => {
-                simulateOperatorReply(text);
-            }, 1200);
-        }
+            await fetch("{{ route('client.chat.send') }}", {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                },
+                body: JSON.stringify({ message: text })
+            });
 
-        function appendClientAttachment(fileName) {
-            const timeNow = new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' }).replace('.', ':');
-            const msgRow = document.createElement('div');
-            msgRow.className = 'msg-row client';
-            msgRow.innerHTML = `
-                <div class="bubble client">
-                    <div>Berikut berkas spesifikasi sampel tambahan:</div>
-                    <div class="attachment-card">
-                        <div class="attach-left">
-                            <div class="attach-icon">
-                                <i class="fa-solid fa-file-pdf"></i>
-                            </div>
-                            <div>
-                                <div class="attach-name">${escapeHtml(fileName)}</div>
-                                <div class="attach-size">850 KB • Dokumen Verifikasi PDF</div>
-                            </div>
-                        </div>
-                        <a href="javascript:void(0)" class="btn-download-attach" title="Unduh Berkas"><i class="fa-solid fa-download"></i></a>
-                    </div>
-                    <div class="bubble-time">
-                        ${timeNow} <i class="fa-solid fa-check" style="color:#93C5FD;"></i>
-                    </div>
-                </div>
-            `;
-            chatContainer.appendChild(msgRow);
-            chatContainer.scrollTop = chatContainer.scrollHeight;
-
-            setTimeout(() => {
-                simulateOperatorReply("berkas lampiran " + fileName);
-            }, 1200);
-        }
-
-        function simulateOperatorReply(clientQuery) {
-            const timeNow = new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' }).replace('.', ':');
-            let replyText = "Baik Rekan Peneliti, pesan Anda sudah diterima oleh operator cleanroom kami. Kami sedang menyiapkan instrumen sesuai jadwal praktikum yang diajukan.";
-
-            const q = clientQuery.toLowerCase();
-            if (q.includes('jadwal') || q.includes('kapan') || q.includes('waktu')) {
-                replyText = "Slot running instrumen tersedia setiap hari kerja pukul 08:30 - 16:30 WIB. Silakan ajukan melalui formulir reservasi pada katalog lab untuk memastikan kuota antrean.";
-            } else if (q.includes('biaya') || q.includes('tarif') || q.includes('harga')) {
-                replyText = "Tarif pengujian sesuai PNBP resmi SIMPONI: Pengujian GC-MS Rp 350.000/sampel (sudah termasuk gas helium ultrapure dan kolom kapiler standar).";
-            } else if (q.includes('terima kasih') || q.includes('makasih')) {
-                replyText = "Sama-sama Rekan Peneliti! Jika ada kendala teknis lainnya, jangan ragu untuk menghubungi kami kembali di sini. Selamat melanjutkan riset!";
-            }
-
-            const opRow = document.createElement('div');
-            opRow.className = 'msg-row operator';
-            opRow.innerHTML = `
-                <div class="bubble operator">
-                    <div class="bubble-sender">
-                        <i class="fa-solid fa-user-gear"></i> Operator Lab • Cleanroom B-204
-                    </div>
-                    <div>${replyText}</div>
-                    <div class="bubble-time">${timeNow}</div>
-                </div>
-            `;
-            chatContainer.appendChild(opRow);
-            chatContainer.scrollTop = chatContainer.scrollHeight;
+            loadClientMessages();
         }
 
         function openSopModal() {
@@ -795,8 +608,15 @@
 
         function escapeHtml(text) {
             const map = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' };
-            return text.replace(/[&<>"']/g, m => map[m]);
+            return String(text).replace(/[&<>"']/g, m => map[m]);
         }
+
+        window.addEventListener('load', () => {
+            if (isLoggedInClient) {
+                loadClientMessages();
+                setInterval(loadClientMessages, 3000);
+            }
+        });
     </script>
 </body>
 </html>
