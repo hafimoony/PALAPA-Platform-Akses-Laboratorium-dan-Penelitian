@@ -717,7 +717,7 @@
                 </p>
             </div>
             <div class="hero-image-wrapper">
-                <img src="https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?q=80&w=800&auto=format&fit=crop" class="hero-image" alt="Laboratorium Riset PALAPA">
+                <img src="{{ asset('images/hero-lab.jpg') }}" class="hero-image" alt="Laboratorium Riset PALAPA">
             </div>
         </section>
 
